@@ -99,6 +99,21 @@ public extension View {
     }
 }
 
+// MARK: - Gesture
+
+public extension View {
+    @ViewBuilder
+    func simultaneousGesture(_ gesture: some Gesture, enabled: Bool) -> some View {
+        if enabled {
+            simultaneousGesture(
+                gesture
+            )
+        } else {
+            self
+        }
+    }
+}
+
 private struct SizePreferenceKey: PreferenceKey {
     static var defaultValue: CGSize = .zero
     static func reduce(value _: inout CGSize, nextValue _: () -> CGSize) {}
