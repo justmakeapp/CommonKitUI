@@ -8,6 +8,10 @@
 import SwiftUI
 import SwiftUIExtension
 
+#if canImport(UIKit.UIImpactFeedbackGenerator)
+    import UIKit.UIImpactFeedbackGenerator
+#endif
+
 public struct DebounceButton<LabelView: View>: View {
     private let action: () -> Void
     private let label: () -> LabelView
@@ -26,6 +30,11 @@ public struct DebounceButton<LabelView: View>: View {
     public var body: some View {
         Button {
             if canTap {
+                #if canImport(UIKit.UIImpactFeedbackGenerator)
+                    let generator = UIImpactFeedbackGenerator(style: .light)
+                    generator.impactOccurred()
+                #endif
+
                 action()
                 canTap = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
