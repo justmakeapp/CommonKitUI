@@ -21,6 +21,24 @@ public extension View {
         }
     }
 
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    func alert<Value>(
+        title: Text,
+        using value: Binding<Value?>,
+        @ViewBuilder actions: @escaping (Value) -> some View
+    ) -> some View {
+        let binding = Binding<Bool>(
+            get: { value.wrappedValue != nil },
+            set: { _ in value.wrappedValue = nil }
+        )
+
+        return alert(title, isPresented: binding) {
+            if let value = value.wrappedValue {
+                actions(value)
+            }
+        }
+    }
+
     @available(iOS 15, *)
     func alert<Value>(
         using value: Binding<Value?>,
