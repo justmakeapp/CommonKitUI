@@ -1,6 +1,5 @@
 //
 //  UITextField+Extension.swift
-//  Metacard
 //
 //  Created by Long Vu on 04/04/2023.
 //
