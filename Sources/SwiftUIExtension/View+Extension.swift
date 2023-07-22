@@ -13,13 +13,13 @@ public extension ViewModifier {
 public extension View {
     @ViewBuilder
     func buildView(
-        @ViewBuilder catalystBuilder: () -> some View,
-        @ViewBuilder nonCatalystBuilder: () -> some View
+        @ViewBuilder macBuilder: () -> some View,
+        @ViewBuilder nonMacBuilder: () -> some View
     ) -> some View {
-        #if targetEnvironment(macCatalyst)
-            catalystBuilder()
+        #if targetEnvironment(macCatalyst) || os(macOS)
+            macBuilder()
         #else
-            nonCatalystBuilder()
+            nonMacBuilder()
         #endif
     }
 
