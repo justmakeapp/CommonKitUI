@@ -24,20 +24,20 @@ public extension View {
     }
 
     @ViewBuilder
-    func buildCatalystView(
-        @ViewBuilder catalystBuilder: () -> some View
+    func buildMacView(
+        @ViewBuilder viewBuilder: () -> some View
     ) -> some View {
-        #if targetEnvironment(macCatalyst)
-            catalystBuilder()
+        #if targetEnvironment(macCatalyst) || os(macOS)
+            viewBuilder()
         #endif
     }
 
     @ViewBuilder
-    func buildNonCatalystView(
-        @ViewBuilder nonCatalystBuilder: () -> some View
+    func buildNonMacView(
+        @ViewBuilder viewBuilder: () -> some View
     ) -> some View {
-        #if !targetEnvironment(macCatalyst)
-            nonCatalystBuilder()
+        #if !targetEnvironment(macCatalyst) && !os(macOS)
+            viewBuilder()
         #endif
     }
 }
