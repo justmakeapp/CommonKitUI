@@ -1,5 +1,5 @@
 //
-//  DebounceTapGesture.swift
+//  View+DebounceTapGesture.swift
 //
 //
 //  Created by Duy Truong on 11/12/2022.
