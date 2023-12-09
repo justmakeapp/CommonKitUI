@@ -1,10 +1,10 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.9
 
 import PackageDescription
 
 let package = Package(
     name: "CommonKitUI",
-    platforms: [.iOS(.v14), .macOS(.v12)],
+    platforms: [.iOS(.v15), .macOS(.v12), .macCatalyst(.v15)],
     products: [
         .library(
             name: "ViewComponent",
@@ -22,9 +22,16 @@ let package = Package(
     targets: [
         .target(
             name: "ViewComponent",
-            dependencies: [.byName(name: "SwiftUIExtension")]
+            dependencies: [
+                "SwiftUIExtension"
+            ]
         ),
-        .target(name: "SwiftUIExtension"),
+        .target(
+            name: "SwiftUIExtension",
+            dependencies: [
+                "UIKitExtension"
+            ]
+        ),
         .target(name: "UIKitExtension")
     ]
 )
