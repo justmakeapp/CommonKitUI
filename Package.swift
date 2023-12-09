@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "CommonKitUI",
-    platforms: [.iOS(.v15), .macOS(.v12), .macCatalyst(.v15)],
+    platforms: [.iOS(.v14), .macOS(.v11), .macCatalyst(.v14)],
     products: [
         .library(
             name: "ViewComponent",
