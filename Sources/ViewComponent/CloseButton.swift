@@ -20,7 +20,8 @@ public struct CloseButton: View {
             action()
         }, label: {
             Image(systemName: "xmark.circle.fill")
-                .font(.title3)
+                .font(.title)
+                .imageScale(.medium)
                 .foregroundColor(Color.secondary.opacity(0.6))
         })
         .buttonStyle(.plain)
