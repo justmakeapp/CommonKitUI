@@ -32,7 +32,7 @@ public struct ProgressView: View {
     private func progressView(width: CGFloat) -> some View {
         return Rectangle()
             .fill(configuration.progressColor)
-            .frame(width: width * percentage)
+            .frame(width: max(width * percentage, 0))
             .cornerRadius(configuration.cornerRadius)
     }
 
