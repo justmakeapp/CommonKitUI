@@ -1,7 +1,4 @@
 import SwiftUI
-#if canImport(UIKit.UIImpactFeedbackGenerator)
-    import UIKit.UIImpactFeedbackGenerator
-#endif
 
 /// https://github.com/joogps/ExitButton
 // struct ExitButtonView: View {
@@ -30,10 +27,7 @@ public struct CloseButton: View {
 
     public var body: some View {
         Button(action: {
-            #if canImport(UIKit.UIImpactFeedbackGenerator)
-                let generator = UIImpactFeedbackGenerator(style: .light)
-                generator.impactOccurred()
-            #endif
+            FeedbackManager.selectionChangedFeedback()
 
             action()
         }, label: {
