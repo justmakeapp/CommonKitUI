@@ -18,7 +18,7 @@
             var didFinishPickingMediaWithInfo: ([UIImagePickerController.InfoKey: Any]) -> Void = { _ in }
         }
 
-        private var configuration: Configuration
+        private var config: Configuration
 
         @Environment(\.presentationMode) private var presentationMode
 
@@ -26,7 +26,7 @@
             didPickImage: ((UIImage) -> Void)? = nil,
             didFinishPickingMediaWithInfo: @escaping ([UIImagePickerController.InfoKey: Any]) -> Void = { _ in }
         ) {
-            configuration = .init(
+            config = .init(
                 didPickImage: didPickImage,
                 didFinishPickingMediaWithInfo: didFinishPickingMediaWithInfo
             )
@@ -35,8 +35,8 @@
         public func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>)
             -> UIImagePickerController {
             let imagePicker = UIImagePickerController()
-            imagePicker.allowsEditing = configuration.allowsEditing
-            imagePicker.sourceType = configuration.sourceType
+            imagePicker.allowsEditing = config.allowsEditing
+            imagePicker.sourceType = config.sourceType
             imagePicker.delegate = context.coordinator
 
             return imagePicker
@@ -46,12 +46,12 @@
             _ picker: UIImagePickerController,
             context _: UIViewControllerRepresentableContext<ImagePicker>
         ) {
-            if configuration.allowsEditing != picker.allowsEditing {
-                picker.allowsEditing = configuration.allowsEditing
+            if config.allowsEditing != picker.allowsEditing {
+                picker.allowsEditing = config.allowsEditing
             }
 
-            if configuration.sourceType != picker.sourceType {
-                picker.sourceType = configuration.sourceType
+            if config.sourceType != picker.sourceType {
+                picker.sourceType = config.sourceType
             }
         }
 
@@ -70,11 +70,11 @@
                 _: UIImagePickerController,
                 didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
             ) {
-                if let didPickImage = parent.configuration.didPickImage,
-                   let image = info[parent.configuration.infoKey] as? UIImage {
+                if let didPickImage = parent.config.didPickImage,
+                   let image = info[parent.config.infoKey] as? UIImage {
                     didPickImage(image)
                 }
-                parent.configuration.didFinishPickingMediaWithInfo(info)
+                parent.config.didFinishPickingMediaWithInfo(info)
 
                 parent.presentationMode.wrappedValue.dismiss()
             }
@@ -85,15 +85,15 @@
 
     public extension ImagePicker {
         func sourceType(_ value: UIImagePickerController.SourceType) -> Self {
-            return then { $0.configuration.sourceType = value }
+            return then { $0.config.sourceType = value }
         }
 
         func infoKey(_ infoKey: UIImagePickerController.InfoKey) -> Self {
-            return then { $0.configuration.infoKey = infoKey }
+            return then { $0.config.infoKey = infoKey }
         }
 
         func allowsEditing(_ value: Bool) -> Self {
-            return then { $0.configuration.allowsEditing = value }
+            return then { $0.config.allowsEditing = value }
         }
     }
 

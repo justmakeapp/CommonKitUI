@@ -16,28 +16,28 @@
             var didPickDocuments: (_ urls: [URL]) -> Void
         }
 
-        private var configuration: Configuration
+        private var config: Configuration
 
         public init(
             contentTypes: [UTType],
             didPickDocuments: @escaping ([URL]) -> Void = { _ in }
         ) {
-            configuration = .init(
+            config = .init(
                 contentTypes: contentTypes,
                 didPickDocuments: didPickDocuments
             )
         }
 
         public func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-            let pickerController = UIDocumentPickerViewController(forOpeningContentTypes: configuration.contentTypes)
-            pickerController.allowsMultipleSelection = configuration.allowsMultipleSelection
+            let pickerController = UIDocumentPickerViewController(forOpeningContentTypes: config.contentTypes)
+            pickerController.allowsMultipleSelection = config.allowsMultipleSelection
             pickerController.delegate = context.coordinator
             return pickerController
         }
 
         public func updateUIViewController(_ controller: UIDocumentPickerViewController, context _: Context) {
-            if controller.allowsMultipleSelection != configuration.allowsMultipleSelection {
-                controller.allowsMultipleSelection = configuration.allowsMultipleSelection
+            if controller.allowsMultipleSelection != config.allowsMultipleSelection {
+                controller.allowsMultipleSelection = config.allowsMultipleSelection
             }
         }
 
@@ -53,14 +53,14 @@
             }
 
             public func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-                parent.configuration.didPickDocuments(urls)
+                parent.config.didPickDocuments(urls)
             }
         }
     }
 
     public extension DocumentPicker {
         func allowsMultipleSelection(_ value: Bool) -> Self {
-            then { $0.configuration.allowsMultipleSelection = value }
+            then { $0.config.allowsMultipleSelection = value }
         }
     }
 #endif
