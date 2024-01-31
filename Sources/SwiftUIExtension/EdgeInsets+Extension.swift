@@ -16,4 +16,13 @@ public extension EdgeInsets {
             trailing: value
         )
     }
+
+    init(horizontal: CGFloat, vertical: CGFloat) {
+        self.init(
+            top: vertical,
+            leading: horizontal,
+            bottom: vertical,
+            trailing: horizontal
+        )
+    }
 }
