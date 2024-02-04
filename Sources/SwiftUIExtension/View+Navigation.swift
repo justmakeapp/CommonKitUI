@@ -11,14 +11,16 @@ public extension View {
     @available(iOS 16.0, *)
     func navigationDestination<Value>(
         using value: Binding<Value?>,
-        content: (Value) -> some View
+        @ViewBuilder content: (Value) -> some View
     ) -> some View {
         let binding = Binding<Bool>(
             get: { value.wrappedValue != nil },
             set: { _ in value.wrappedValue = nil }
         )
         return navigationDestination(isPresented: binding) {
-            content(value.wrappedValue!)
+            if let v = value.wrappedValue {
+                content(v)
+            }
         }
     }
 }
