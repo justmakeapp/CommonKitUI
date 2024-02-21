@@ -8,7 +8,7 @@
 import SwiftUI
 
 public extension View {
-    @available(iOS 16.0, *)
+    @available(iOS 16.0, macOS 13.0, *)
     func navigationDestination<Value>(
         using value: Binding<Value?>,
         @ViewBuilder content: (Value) -> some View

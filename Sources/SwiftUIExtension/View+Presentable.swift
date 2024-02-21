@@ -39,7 +39,7 @@ public extension View {
         }
     }
 
-    @available(iOS 15, *)
+    @available(iOS 15, macOS 12.0, *)
     func alert<Value>(
         using value: Binding<Value?>,
         title: (Value) -> String,

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 public struct TypewriterView: View {
     private var text: String
     private var typingDelay: Duration
@@ -15,12 +15,16 @@ public struct TypewriterView: View {
     @State private var animatedText: AttributedString = ""
     @State private var typingTask: Task<Void, Error>?
 
+    let onCompleted: () -> Void
+
     public init(
         text: String,
-        typingDelay: Duration = .milliseconds(30)
+        typingDelay: Duration = .milliseconds(30),
+        onCompleted: @escaping () -> Void = {}
     ) {
         self.text = text
         self.typingDelay = typingDelay
+        self.onCompleted = onCompleted
     }
 
     public var body: some View {
@@ -53,6 +57,8 @@ public struct TypewriterView: View {
                 // Advance the index, character by character
                 index = animatedText.index(afterCharacter: index)
             }
+
+            onCompleted()
         }
     }
 }
