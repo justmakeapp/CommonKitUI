@@ -6,6 +6,7 @@ public struct GenericDialog<DialogContent: View>: ViewModifier {
     let cancelOnTapOutside: Bool
     let cancelAction: (() -> Void)?
     let dialogContent: DialogContent
+    @Environment(\.colorScheme) private var colorScheme
 
     public init(
         isShowing: Binding<Bool>,
@@ -35,12 +36,21 @@ public struct GenericDialog<DialogContent: View>: ViewModifier {
                 ZStack {
                     dialogContent
                         .background(RoundedRectangle(cornerRadius: 8)
-                            .foregroundColor(.white))
+                            .foregroundColor(bgColor))
                 }.padding(40)
             }
         }
         .ignoresSafeArea()
         .animation(.linear, value: isShowing)
+    }
+
+    private var bgColor: Color {
+        switch colorScheme {
+        case .light:
+            return .white
+        case .dark:
+            return Color(red: 0.17, green: 0.17, blue: 0.18)
+        }
     }
 }
 
