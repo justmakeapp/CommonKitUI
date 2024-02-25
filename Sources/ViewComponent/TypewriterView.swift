@@ -69,7 +69,7 @@ public struct TypewriterView: View {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 public extension TypewriterView {
     struct Config {
         var typingDelay: Duration = .milliseconds(30)
