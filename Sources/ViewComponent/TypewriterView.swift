@@ -6,25 +6,23 @@
 //
 
 import SwiftUI
+import SwiftUIExtension
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct TypewriterView: View {
     private var text: String
-    private var typingDelay: Duration
 
     @State private var animatedText: AttributedString = ""
     @State private var typingTask: Task<Void, Error>?
 
-    let onCompleted: () -> Void
+    private var config: Config
 
     public init(
         text: String,
-        typingDelay: Duration = .milliseconds(30),
-        onCompleted: @escaping () -> Void = {}
+        typingDelay: Duration = .milliseconds(30)
     ) {
         self.text = text
-        self.typingDelay = typingDelay
-        self.onCompleted = onCompleted
+        self.config = .init(typingDelay: typingDelay)
     }
 
     public var body: some View {
@@ -43,7 +41,15 @@ public struct TypewriterView: View {
                 attributes: defaultAttributes.foregroundColor(.clear)
             )
 
-            var index = animatedText.startIndex
+            let stringIndex = text.index(
+                text.startIndex,
+                offsetBy: config.offsetBy
+            )
+            var index = AttributedString.Index(
+                stringIndex,
+                within: animatedText
+            ) ?? animatedText.startIndex
+
             while index < animatedText.endIndex {
                 try Task.checkCancellation()
 
@@ -52,13 +58,34 @@ public struct TypewriterView: View {
                     .setAttributes(defaultAttributes)
 
                 // Wait
-                try await Task.sleep(for: typingDelay)
+                try await Task.sleep(for: config.typingDelay)
 
                 // Advance the index, character by character
                 index = animatedText.index(afterCharacter: index)
             }
 
-            onCompleted()
+            config.onCompleted()
         }
+    }
+}
+
+@available(iOS 16.0, *)
+public extension TypewriterView {
+    struct Config {
+        var typingDelay: Duration = .milliseconds(30)
+        var offsetBy: Int = 0
+        var onCompleted: () -> Void = {}
+    }
+
+//    func typingDelay(_ value: Duration) -> Self {
+//        then { $0.config.typingDelay = value }
+//    }
+
+    func offsetBy(_ value: Int) -> Self {
+        then { $0.config.offsetBy = value }
+    }
+
+    func onCompleted(_ value: @escaping () -> Void) -> Self {
+        then { $0.config.onCompleted = value }
     }
 }
