@@ -50,6 +50,8 @@ public struct GenericDialog<DialogContent: View>: ViewModifier {
             return .white
         case .dark:
             return Color(red: 0.17, green: 0.17, blue: 0.18)
+        @unknown default:
+            return .white
         }
     }
 }

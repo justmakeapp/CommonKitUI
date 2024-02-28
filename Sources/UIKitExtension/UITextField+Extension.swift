@@ -4,7 +4,7 @@
 //  Created by Long Vu on 04/04/2023.
 //
 
-#if canImport(UIKit)
+#if os(iOS)
     import UIKit
 
     public extension UITextField {
