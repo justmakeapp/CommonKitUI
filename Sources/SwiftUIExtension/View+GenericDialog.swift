@@ -73,6 +73,27 @@ public extension View {
 }
 
 public extension View {
+    @available(iOS 15.0, macOS 12.0, *)
+    func loadingDialog(
+        isShowing: Binding<Bool>,
+        cancelOnTapOutside: Bool = false,
+        cancelAction: (() -> Void)? = nil
+    ) -> some View {
+        self.modifier(GenericDialog(
+            isShowing: isShowing,
+            cancelOnTapOutside: cancelOnTapOutside,
+            cancelAction: cancelAction,
+            dialogContent: {
+                ZStack {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .controlSize(.large)
+                }
+                .padding()
+            }
+        ))
+    }
+
     func progressDialog(
         isShowing: Binding<Bool>,
         message: String,
