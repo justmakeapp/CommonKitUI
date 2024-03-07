@@ -42,6 +42,6 @@ public struct DebounceButton<LabelView: View>: View {
 
 public extension DebounceButton {
     func debounceTime(_ value: DispatchTimeInterval) -> Self {
-        then { $0.debounceTime = value }
+        transform { $0.debounceTime = value }
     }
 }

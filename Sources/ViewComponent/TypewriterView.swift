@@ -82,10 +82,10 @@ public extension TypewriterView {
 //    }
 
     func offsetBy(_ value: Int) -> Self {
-        then { $0.config.offsetBy = value }
+        transform { $0.config.offsetBy = value }
     }
 
     func onCompleted(_ value: @escaping () -> Void) -> Self {
-        then { $0.config.onCompleted = value }
+        transform { $0.config.onCompleted = value }
     }
 }

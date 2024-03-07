@@ -60,7 +60,7 @@
 
     public extension DocumentPicker {
         func allowsMultipleSelection(_ value: Bool) -> Self {
-            then { $0.config.allowsMultipleSelection = value }
+            transform { $0.config.allowsMultipleSelection = value }
         }
     }
 #endif

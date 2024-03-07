@@ -84,23 +84,23 @@ public extension ProgressView {
     }
 
     func style(_ value: Style) -> Self {
-        return then { $0.config.style = value }
+        return transform { $0.config.style = value }
     }
 
     func progressColor(_ value: Color) -> Self {
-        return then { $0.config.progressColor = value }
+        return transform { $0.config.progressColor = value }
     }
 
     func trackColor(_ value: Color) -> Self {
-        return then { $0.config.trackColor = value }
+        return transform { $0.config.trackColor = value }
     }
 
     func cornerRadius(_ value: CGFloat) -> Self {
-        return then { $0.config.cornerRadius = value }
+        return transform { $0.config.cornerRadius = value }
     }
 
     func lineWidth(_ value: CGFloat) -> Self {
-        return then { $0.config.lineWidth = value }
+        return transform { $0.config.lineWidth = value }
     }
 }
 

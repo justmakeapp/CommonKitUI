@@ -85,15 +85,15 @@
 
     public extension ImagePicker {
         func sourceType(_ value: UIImagePickerController.SourceType) -> Self {
-            return then { $0.config.sourceType = value }
+            return transform { $0.config.sourceType = value }
         }
 
         func infoKey(_ infoKey: UIImagePickerController.InfoKey) -> Self {
-            return then { $0.config.infoKey = infoKey }
+            return transform { $0.config.infoKey = infoKey }
         }
 
         func allowsEditing(_ value: Bool) -> Self {
-            return then { $0.config.allowsEditing = value }
+            return transform { $0.config.allowsEditing = value }
         }
     }
 
