@@ -35,6 +35,17 @@ public extension View {
     }
 
     @ViewBuilder
+    func buildPhoneView(
+        @ViewBuilder viewBuilder: () -> some View
+    ) -> some View {
+        #if os(iOS)
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                viewBuilder()
+            }
+        #endif
+    }
+
+    @ViewBuilder
     func buildMacView(
         @ViewBuilder viewBuilder: () -> some View
     ) -> some View {
