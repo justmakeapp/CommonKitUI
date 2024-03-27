@@ -24,6 +24,17 @@ public extension View {
     }
 
     @ViewBuilder
+    func buildPadView(
+        @ViewBuilder viewBuilder: () -> some View
+    ) -> some View {
+        #if os(iOS)
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                viewBuilder()
+            }
+        #endif
+    }
+
+    @ViewBuilder
     func buildMacView(
         @ViewBuilder viewBuilder: () -> some View
     ) -> some View {
