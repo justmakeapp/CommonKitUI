@@ -24,6 +24,28 @@ public extension View {
     }
 
     @ViewBuilder
+    func buildView(
+        @ViewBuilder onMac: () -> some View,
+        @ViewBuilder onPad: () -> some View,
+        @ViewBuilder onPhone: () -> some View
+    ) -> some View {
+        #if targetEnvironment(macCatalyst) || os(macOS)
+            onMac()
+        #endif
+
+        #if os(iOS)
+            switch UIDevice.current.userInterfaceIdiom {
+            case .pad:
+                onPad()
+            case .phone:
+                onPhone()
+            default:
+                EmptyView()
+            }
+        #endif
+    }
+
+    @ViewBuilder
     func buildPadView(
         @ViewBuilder viewBuilder: () -> some View
     ) -> some View {
