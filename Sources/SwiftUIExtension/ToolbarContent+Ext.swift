@@ -39,4 +39,15 @@ public extension ToolbarContent {
             viewBuilder()
         #endif
     }
+
+    @ViewBuilder
+    func buildPhoneView(
+        @ViewBuilder viewBuilder: () -> some View
+    ) -> some View {
+        #if os(iOS)
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                viewBuilder()
+            }
+        #endif
+    }
 }
