@@ -30,11 +30,16 @@ public extension ButtonStyle {
 }
 
 public struct PressEffectButtonStyle: ButtonStyle {
-    public init() {}
+    let pressedScale: CGFloat
+    public init(
+        pressedScale: CGFloat = 0.9
+    ) {
+        self.pressedScale = pressedScale
+    }
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+            .scaleEffect(configuration.isPressed ? pressedScale : 1.0)
             .opacity(configuration.isPressed ? 0.6 : 1.0)
             .animation(.default, value: configuration.isPressed)
     }
