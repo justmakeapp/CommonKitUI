@@ -63,7 +63,7 @@ public struct ProgressView: View {
 
         case .circular:
             Circle()
-                .stroke(config.trackColor, lineWidth: 16)
+                .stroke(config.trackColor, lineWidth: config.lineWidth)
                 .padding(config.lineWidth / 2)
         }
     }
