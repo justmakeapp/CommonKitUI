@@ -51,3 +51,13 @@ public extension ToolbarContent {
         #endif
     }
 }
+
+public extension ToolbarContent {
+    func transform(_ body: (inout Self) -> Void) -> Self {
+        var result = self
+
+        body(&result)
+
+        return result
+    }
+}
