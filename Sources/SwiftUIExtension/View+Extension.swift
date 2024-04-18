@@ -68,6 +68,15 @@ public extension View {
     }
 
     @ViewBuilder
+    func buildPhoneAndPadView(
+        @ViewBuilder viewBuilder: () -> some View
+    ) -> some View {
+        #if os(iOS)
+            viewBuilder()
+        #endif
+    }
+
+    @ViewBuilder
     func buildMacView(
         @ViewBuilder viewBuilder: () -> some View
     ) -> some View {

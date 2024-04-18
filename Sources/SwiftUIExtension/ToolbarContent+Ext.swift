@@ -50,6 +50,15 @@ public extension ToolbarContent {
             }
         #endif
     }
+
+    @ViewBuilder
+    func buildPhoneAndPadView(
+        @ViewBuilder viewBuilder: () -> some View
+    ) -> some View {
+        #if os(iOS)
+            viewBuilder()
+        #endif
+    }
 }
 
 public extension ToolbarContent {
