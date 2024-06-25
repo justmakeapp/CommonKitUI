@@ -9,14 +9,14 @@ import SwiftUI
 import SwiftUIExtension
 
 public struct DebounceButton<LabelView: View>: View {
-    private let action: () -> Void
+    private let action: @MainActor () -> Void
     private let label: () -> LabelView
 
     @State private var canTap = true
     private var debounceTime: DispatchTimeInterval = .seconds(1)
 
     public init(
-        action: @escaping () -> Void,
+        action: @escaping @MainActor () -> Void,
         @ViewBuilder label: @escaping () -> LabelView
     ) {
         self.action = action

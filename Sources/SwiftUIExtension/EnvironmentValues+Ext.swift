@@ -18,6 +18,7 @@ public extension EnvironmentValues {
 }
 
 private struct SafeAreaInsetsKey: EnvironmentKey {
+    @MainActor
     static var defaultValue: EdgeInsets {
         #if canImport(UIKit)
             let keyWindow = UIApplication.shared.activeKeyWindow

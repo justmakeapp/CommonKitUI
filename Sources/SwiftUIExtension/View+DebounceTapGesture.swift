@@ -9,11 +9,14 @@ import SwiftUI
 
 private struct DebounceTapGesture: ViewModifier {
     private let debounceTime: DispatchTimeInterval
-    private let action: () -> Void
+    private let action: @MainActor () -> Void
 
     @State private var canTap = true
 
-    init(debounceTime: DispatchTimeInterval, action: @escaping () -> Void) {
+    init(
+        debounceTime: DispatchTimeInterval,
+        action: @escaping @MainActor () -> Void
+    ) {
         self.debounceTime = debounceTime
         self.action = action
     }
@@ -35,7 +38,7 @@ private struct DebounceTapGesture: ViewModifier {
 public extension View {
     func onDebounceTapGesture(
         debounceTime: DispatchTimeInterval = .seconds(1),
-        perform action: @escaping () -> Void
+        perform action: @escaping @MainActor () -> Void
     ) -> some View {
         modifier(DebounceTapGesture(
             debounceTime: debounceTime,

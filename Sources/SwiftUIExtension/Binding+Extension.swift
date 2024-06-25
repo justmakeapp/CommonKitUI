@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 public extension Binding {
-    func onChange(_ handler: @escaping (Value) -> Void) -> Binding<Value> {
+    func onChange(_ handler: @escaping @Sendable (Value) -> Void) -> Binding<Value> {
         Binding(
             get: { self.wrappedValue },
             set: { newValue in
@@ -20,7 +20,7 @@ public extension Binding {
     }
 }
 
-public extension Binding where Value: Equatable {
+public extension Binding where Value: Equatable & Sendable {
     /// Given a binding to an optional value, creates a non-optional binding that projects
     /// the unwrapped value. If the given optional binding contains `nil`, then the supplied
     /// value is assigned to it before the projected binding is generated.

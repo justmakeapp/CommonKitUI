@@ -8,6 +8,7 @@
 import SwiftUI
 
 public extension Color {
+    @MainActor
     init?(onMac: () -> Color, onPad: () -> Color, onPhone: () -> Color) {
         #if targetEnvironment(macCatalyst) || os(macOS)
             self = onMac()

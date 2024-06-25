@@ -14,6 +14,7 @@ import Foundation
 #endif
 
 public enum FeedbackManager {
+    @MainActor
     public static func selectionChangedFeedback() {
         #if os(iOS)
             UISelectionFeedbackGenerator().selectionChanged()

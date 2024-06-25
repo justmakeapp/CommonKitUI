@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  ImageErrorView.swift
 //
 //
 //  Created by Long Vu on 10/6/24.
@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 15.0, *)
 public struct ImageErrorView: View {
     public init() {}
 
