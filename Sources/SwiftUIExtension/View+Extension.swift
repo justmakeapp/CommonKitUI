@@ -10,6 +10,7 @@ public extension ViewModifier {
     }
 }
 
+@MainActor
 public extension View {
     @ViewBuilder
     func buildView(

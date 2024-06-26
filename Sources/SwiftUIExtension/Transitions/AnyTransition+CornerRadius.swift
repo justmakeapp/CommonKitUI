@@ -29,19 +29,38 @@ public struct AnimatableRoundedRectangle: View {
     }
 }
 
-struct AnimatableRoundedRectangleModifier: ViewModifier, Animatable {
+struct AnimatableRoundedRectangleModifier: ViewModifier {
     var cornerRadius: Double
-
-    var animatableData: Double {
-        get { cornerRadius }
-        set { cornerRadius = newValue }
-    }
 
     func body(content: Content) -> some View {
         return content
             .environment(\.cornerRadius, cornerRadius)
     }
 }
+
+#if swift(>=6)
+    extension AnimatableRoundedRectangleModifier: @preconcurrency Animatable {
+        var animatableData: Double {
+            get {
+                cornerRadius
+            }
+            set {
+                cornerRadius = newValue
+            }
+        }
+    }
+#else
+    extension AnimatableRoundedRectangleModifier: Animatable {
+        var animatableData: Double {
+            get {
+                cornerRadius
+            }
+            set {
+                cornerRadius = newValue
+            }
+        }
+    }
+#endif
 
 public extension AnyTransition {
     static func cornerRadius(identity: Double, active: Double) -> AnyTransition {

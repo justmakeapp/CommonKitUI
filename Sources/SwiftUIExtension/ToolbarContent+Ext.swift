@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 public extension ToolbarContent {
     //	@available(iOS 16.0, *)
     //	@ToolbarContentBuilder

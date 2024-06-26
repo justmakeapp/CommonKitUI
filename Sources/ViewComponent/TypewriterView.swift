@@ -13,7 +13,7 @@ public struct TypewriterView: View {
     private var text: String
 
     @State private var animatedText: AttributedString = ""
-    @State private var typingTask: Task<Void, Error>?
+    @State private var typingTaskId: Int = 0
 
     private var config: Config
 
@@ -29,43 +29,44 @@ public struct TypewriterView: View {
         Text(animatedText)
             .onChange(of: text) { _ in animateText() }
             .onAppear { animateText() }
+            .task(id: typingTaskId) {
+                do {
+                    let defaultAttributes = AttributeContainer()
+                    animatedText = AttributedString(
+                        text,
+                        attributes: defaultAttributes.foregroundColor(.clear)
+                    )
+
+                    let stringIndex = text.index(
+                        text.startIndex,
+                        offsetBy: config.offsetBy
+                    )
+                    var index = AttributedString.Index(
+                        stringIndex,
+                        within: animatedText
+                    ) ?? animatedText.startIndex
+
+                    while index < animatedText.endIndex {
+                        try Task.checkCancellation()
+
+                        // Update the style
+                        animatedText[animatedText.startIndex ... index]
+                            .setAttributes(defaultAttributes)
+
+                        // Wait
+                        try await Task.sleep(for: config.typingDelay)
+
+                        // Advance the index, character by character
+                        index = animatedText.index(afterCharacter: index)
+                    }
+
+                    config.onCompleted()
+                } catch {}
+            }
     }
 
     private func animateText() {
-        typingTask?.cancel()
-
-        typingTask = Task {
-            let defaultAttributes = AttributeContainer()
-            animatedText = AttributedString(
-                text,
-                attributes: defaultAttributes.foregroundColor(.clear)
-            )
-
-            let stringIndex = text.index(
-                text.startIndex,
-                offsetBy: config.offsetBy
-            )
-            var index = AttributedString.Index(
-                stringIndex,
-                within: animatedText
-            ) ?? animatedText.startIndex
-
-            while index < animatedText.endIndex {
-                try Task.checkCancellation()
-
-                // Update the style
-                animatedText[animatedText.startIndex ... index]
-                    .setAttributes(defaultAttributes)
-
-                // Wait
-                try await Task.sleep(for: config.typingDelay)
-
-                // Advance the index, character by character
-                index = animatedText.index(afterCharacter: index)
-            }
-
-            config.onCompleted()
-        }
+        typingTaskId += 1
     }
 }
 
