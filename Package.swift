@@ -7,9 +7,11 @@ let package = Package(
     platforms: [
         .iOS(.v15),
         .macOS(.v12),
-        .visionOS(.v1)
+        .visionOS(.v1),
+        .watchOS(.v9)
     ],
     products: [
+        .library(name: "CoreGraphicsExt", targets: ["CoreGraphicsExt"]),
         .library(
             name: "ViewComponent",
             targets: ["ViewComponent"]
@@ -37,7 +39,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "UIKitExtension"
-        )
+            name: "UIKitExtension",
+            dependencies: ["CoreGraphicsExt"]
+        ),
+        .target(name: "CoreGraphicsExt")
     ]
 )

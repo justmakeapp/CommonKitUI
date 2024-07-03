@@ -23,9 +23,11 @@ public struct ImageErrorView: View {
                     .font(.title)
                     .foregroundStyle(.red)
             }
+        #if !os(watchOS)
             .background(
                 .ultraThinMaterial,
                 in: RoundedRectangle(cornerRadius: 8, style: .continuous)
             )
+        #endif
     }
 }

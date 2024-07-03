@@ -5,7 +5,7 @@
 //  Created by Long Vu on 08/12/2023.
 //
 
-#if canImport(UIKit)
+#if os(iOS)
     import UIKit
 
     public extension UIApplication {

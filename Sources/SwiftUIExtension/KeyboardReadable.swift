@@ -35,17 +35,17 @@
                 NotificationCenter.default
                     .publisher(for: UIResponder.keyboardWillShowNotification)
                     .flatMap { notification -> AnyPublisher<CGSize, Never> in
-                        #if swift(>=6)
-                            nonisolated(unsafe) let userInfo = notification.userInfo
-                        #else
-                            let userInfo = notification.userInfo
-                        #endif
+//                        #if swift(>=6)
+//                            nonisolated(unsafe) let userInfo = notification.userInfo
+//                        #else
+                        let userInfo = notification.userInfo
+//                        #endif
 
                         return Deferred {
                             Future<CGSize, Never> { promise in
-                                #if swift(>=6)
-                                    nonisolated(unsafe) let promise = promise
-                                #endif
+//                                #if swift(>=6)
+//                                    nonisolated(unsafe) let promise = promise
+//                                #endif
 
                                 Task { @MainActor in
                                     guard

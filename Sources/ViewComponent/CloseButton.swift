@@ -37,7 +37,9 @@ public struct CloseButton: View {
                 .foregroundColor(Color.secondary.opacity(0.6))
         })
         .buttonStyle(.plain)
-        .keyboardShortcut(.cancelAction)
+        #if !os(watchOS)
+            .keyboardShortcut(.cancelAction)
+        #endif
     }
 }
 
