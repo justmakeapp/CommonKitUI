@@ -9,7 +9,7 @@
 import SwiftUI
 
 /// A view that arranges its subviews in horizontal line and wraps them to the next lines if necessary.
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, *)
 public struct WrappingHStack: Layout {
     /// The guide for aligning the subviews in this stack. This guide has the same screen coordinate for every subview.
     public var alignment: Alignment
@@ -112,7 +112,7 @@ public struct WrappingHStack: Layout {
     }
 }
 
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, *)
 extension WrappingHStack {
     struct Row {
         var elements: [(index: Int, size: CGSize, xOffset: CGFloat)] = []
