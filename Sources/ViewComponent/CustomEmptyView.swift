@@ -9,14 +9,16 @@ import SwiftUI
 
 public struct CustomEmptyView: View {
     private let title: String
+    private let systemImage: String
 
-    public init(title: String) {
+    public init(title: String, systemImage: String = "tray") {
         self.title = title
+        self.systemImage = systemImage
     }
 
     public var body: some View {
         VStack {
-            Image(systemName: "tray")
+            Image(systemName: systemImage)
                 .font(.largeTitle)
                 .imageScale(.large)
 
