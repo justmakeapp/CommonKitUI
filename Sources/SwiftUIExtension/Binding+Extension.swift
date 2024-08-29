@@ -8,13 +8,13 @@
 import Foundation
 import SwiftUI
 
-public extension Binding {
-    func onChange(_ handler: @escaping @Sendable (Value) -> Void) -> Binding<Value> {
+public extension Binding where Value: Sendable {
+    func onChange(action: @escaping @Sendable (Value) -> Void) -> Binding<Value> {
         Binding(
             get: { self.wrappedValue },
             set: { newValue in
                 self.wrappedValue = newValue
-                handler(newValue)
+                action(newValue)
             }
         )
     }
