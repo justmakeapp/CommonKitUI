@@ -5,10 +5,12 @@
 //  Created by Long Vu on 18/8/24.
 //
 
-import UIKit
+#if canImport(UIKit)
+    import UIKit
 
-public extension UIView {
-    var isRTL: Bool {
-        return UIView.userInterfaceLayoutDirection(for: UIView().semanticContentAttribute) == .rightToLeft
+    public extension UIView {
+        var isRTL: Bool {
+            return UIView.userInterfaceLayoutDirection(for: UIView().semanticContentAttribute) == .rightToLeft
+        }
     }
-}
+#endif
