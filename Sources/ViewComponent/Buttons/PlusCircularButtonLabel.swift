@@ -19,7 +19,7 @@ public struct PlusCircularButtonLabel: View {
                 Image(systemName: "plus")
                     .font(.title2)
                     .modifier {
-                        if #available(iOS 16.0, *) {
+                        if #available(iOS 16.0, macOS 13.0, *) {
                             $0.fontWeight(.bold)
                         } else {
                             $0
