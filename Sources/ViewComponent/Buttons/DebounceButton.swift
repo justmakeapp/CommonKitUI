@@ -13,7 +13,8 @@ public struct DebounceButton<LabelView: View>: View {
     private let label: () -> LabelView
 
     @State private var canTap = true
-    private var debounceTime: DispatchTimeInterval = .seconds(1)
+
+    private var config = Config()
 
     public init(
         action: @escaping @MainActor () -> Void,
@@ -26,11 +27,14 @@ public struct DebounceButton<LabelView: View>: View {
     public var body: some View {
         Button {
             if canTap {
-                FeedbackManager.selectionChangedFeedback()
+                if !config.disabledHapticFeedback {
+                    FeedbackManager.selectionChangedFeedback()
+                }
 
                 action()
                 canTap = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + config.debounceTime) {
                     canTap = true
                 }
             }
@@ -41,7 +45,16 @@ public struct DebounceButton<LabelView: View>: View {
 }
 
 public extension DebounceButton {
+    struct Config {
+        var debounceTime: DispatchTimeInterval = .seconds(1)
+        var disabledHapticFeedback = false
+    }
+
     func debounceTime(_ value: DispatchTimeInterval) -> Self {
-        transform { $0.debounceTime = value }
+        transform { $0.config.debounceTime = value }
+    }
+
+    func disabledHapticFeedback(_ value: Bool = true) -> Self {
+        transform { $0.config.disabledHapticFeedback = value }
     }
 }
