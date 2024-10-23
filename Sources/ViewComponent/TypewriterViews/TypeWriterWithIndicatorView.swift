@@ -53,6 +53,11 @@ public struct TypeWriterWithIndicatorView: View {
             }
         }
         #endif
+        .onChange(of: config.canAnimate) { newValue in
+            if newValue {
+                animateText()
+            }
+        }
     }
 
     private var contentView: some View {
@@ -69,7 +74,7 @@ public struct TypeWriterWithIndicatorView: View {
                         return
                     }
                 #endif
-                guard sentences.count > currentSampleIndex else {
+                guard sentences.count > currentSampleIndex, config.canAnimate else {
                     return
                 }
                 let text = sentences[currentSampleIndex]
@@ -107,7 +112,7 @@ public struct TypeWriterWithIndicatorView: View {
                 return
             }
         #endif
-        guard config.enabledHapticFeedback else {
+        guard config.canAnimate else {
             return
         }
         #if os(iOS)
@@ -144,15 +149,15 @@ public extension TypeWriterWithIndicatorView {
 
     struct Config {
         var onNextSentence: () -> Void = {}
-        var enabledHapticFeedback: Bool = true
+        var canAnimate: Bool = true
     }
 
     func onNextSentence(perform action: @escaping () -> Void) -> Self {
         transform { $0.config.onNextSentence = action }
     }
 
-    func enabledHapticFeedback(_ enabled: Bool) -> some View {
-        transform { $0.config.enabledHapticFeedback = enabled }
+    func canAnimate(_ enabled: Bool) -> Self {
+        transform { $0.config.canAnimate = enabled }
     }
 }
 
