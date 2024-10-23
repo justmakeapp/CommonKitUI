@@ -16,6 +16,14 @@ public struct TypeWriterWithIndicatorView: View {
     @State private var animatedText: String = ""
     @State private var currentSampleIndex = 0
 
+    #if os(macOS)
+        @Environment(\.controlActiveState) private var controlActiveState
+    #endif
+
+    #if os(iOS)
+        @Environment(\.scenePhase) var scenePhase
+    #endif
+
     private var config: Config = .init()
 
     public init(
@@ -25,9 +33,42 @@ public struct TypeWriterWithIndicatorView: View {
     }
 
     public var body: some View {
+        contentView
+        #if os(macOS)
+        .onChange(of: controlActiveState) { newValue in
+            switch newValue {
+            case .key, .active:
+                animateText()
+            case .inactive:
+                break
+            @unknown default:
+                break
+            }
+        }
+        #endif
+        #if os(iOS)
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                animateText()
+            }
+        }
+        #endif
+    }
+
+    private var contentView: some View {
         (Text(animatedText) + Text(" ") + Text(Image(systemName: "circle.fill")))
             .onAppear { animateText() }
             .task(id: typingTaskId) {
+                #if os(macOS)
+                    guard controlActiveState != .inactive else {
+                        return
+                    }
+                #endif
+                #if os(iOS)
+                    guard scenePhase == .active else {
+                        return
+                    }
+                #endif
                 guard sentences.count > currentSampleIndex else {
                     return
                 }
@@ -56,6 +97,19 @@ public struct TypeWriterWithIndicatorView: View {
     }
 
     private func selectionChangedFeedback() {
+        #if os(macOS)
+            guard controlActiveState != .inactive else {
+                return
+            }
+        #endif
+        #if os(iOS)
+            guard scenePhase == .active else {
+                return
+            }
+        #endif
+        guard config.enabledHapticFeedback else {
+            return
+        }
         #if os(iOS)
             UISelectionFeedbackGenerator().selectionChanged()
         #endif
@@ -90,10 +144,15 @@ public extension TypeWriterWithIndicatorView {
 
     struct Config {
         var onNextSentence: () -> Void = {}
+        var enabledHapticFeedback: Bool = true
     }
 
     func onNextSentence(perform action: @escaping () -> Void) -> Self {
         transform { $0.config.onNextSentence = action }
+    }
+
+    func enabledHapticFeedback(_ enabled: Bool) -> some View {
+        transform { $0.config.enabledHapticFeedback = enabled }
     }
 }
 
