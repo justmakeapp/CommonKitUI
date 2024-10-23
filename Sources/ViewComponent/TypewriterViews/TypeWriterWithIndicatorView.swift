@@ -112,7 +112,7 @@ public struct TypeWriterWithIndicatorView: View {
                 return
             }
         #endif
-        guard config.canAnimate else {
+        guard config.canAnimate && config.hapticFeedbackEnabled else {
             return
         }
         #if os(iOS)
@@ -149,11 +149,16 @@ public extension TypeWriterWithIndicatorView {
 
     struct Config {
         var onNextSentence: () -> Void = {}
+        var hapticFeedbackEnabled: Bool = true
         var canAnimate: Bool = true
     }
 
     func onNextSentence(perform action: @escaping () -> Void) -> Self {
         transform { $0.config.onNextSentence = action }
+    }
+
+    func hapticFeedbackEnabled(_ enabled: Bool) -> Self {
+        transform { $0.config.hapticFeedbackEnabled = enabled }
     }
 
     func canAnimate(_ enabled: Bool) -> Self {
