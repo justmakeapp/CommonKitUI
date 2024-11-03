@@ -21,12 +21,12 @@ public struct CustomEmptyView: View {
     public var body: some View {
         VStack(spacing: 12) {
             Image(systemName: systemImage)
-                .font(.largeTitle)
+                .font(.largeTitle.weight(.semibold))
                 .imageScale(.large)
 
             VStack {
                 Text(title)
-                    .font(.title3.weight(.semibold))
+                    .font(.title3.weight(.bold))
 
                 description?
                     .font(.footnote)
