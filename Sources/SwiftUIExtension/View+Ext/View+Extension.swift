@@ -96,16 +96,6 @@ public extension View {
 }
 
 public extension View {
-    func padding(edgeInsets: EdgeInsets) -> some View {
-        self
-            .padding(.top, edgeInsets.top)
-            .padding(.bottom, edgeInsets.bottom)
-            .padding(.leading, edgeInsets.leading)
-            .padding(.trailing, edgeInsets.trailing)
-    }
-}
-
-public extension View {
     func transform(_ body: (inout Self) -> Void) -> Self {
         var result = self
 
