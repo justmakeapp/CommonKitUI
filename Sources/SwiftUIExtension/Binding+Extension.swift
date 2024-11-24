@@ -18,6 +18,26 @@ public extension Binding where Value: Sendable {
             }
         )
     }
+
+    func map<T>(
+        _ transform: @Sendable @escaping (Value) -> T,
+        _ reverse: @Sendable @escaping (T) -> Value
+    ) -> Binding<T> {
+        Binding<T>(
+            get: { transform(self.wrappedValue) },
+            set: { wrappedValue = reverse($0) }
+        )
+    }
+
+    func map<T, U>(
+        _ transform: @Sendable @escaping (T) -> U,
+        _ reverse: @Sendable @escaping (U) -> T
+    ) -> Binding<U?> where Value == T? {
+        Binding<U?>(
+            get: { self.wrappedValue.map(transform) },
+            set: { wrappedValue = $0.map(reverse) }
+        )
+    }
 }
 
 public extension Binding where Value: Equatable & Sendable {
