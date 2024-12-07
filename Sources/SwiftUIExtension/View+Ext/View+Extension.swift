@@ -71,7 +71,7 @@ public extension View {
     func buildPhoneAndPadView(
         @ViewBuilder viewBuilder: () -> some View
     ) -> some View {
-        #if os(iOS)
+        #if os(iOS) && !targetEnvironment(macCatalyst)
             viewBuilder()
         #endif
     }
