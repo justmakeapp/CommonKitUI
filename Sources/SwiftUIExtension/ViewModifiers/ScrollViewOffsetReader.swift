@@ -29,7 +29,9 @@ public struct ScrollViewOffsetReader: ViewModifier {
                 )
             })
             .onPreferenceChange(PreferenceKey.self) { position in
-                self.position = position
+                Task { @MainActor in
+                    self.position = position
+                }
             }
     }
 

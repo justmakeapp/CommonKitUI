@@ -131,14 +131,18 @@ public extension View {
         }
     }
 
-    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+    func readSize(onChange: @MainActor @escaping (CGSize) -> Void) -> some View {
         background(
             GeometryReader { geometryProxy in
                 Color.clear
                     .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
             }
         )
-        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+        .onPreferenceChange(SizePreferenceKey.self) { size in
+            Task { @MainActor in
+                onChange(size)
+            }
+        }
     }
 }
 
