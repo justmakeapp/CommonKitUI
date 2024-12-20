@@ -38,6 +38,13 @@ public extension Binding where Value: Sendable {
             set: { wrappedValue = $0.map(reverse) }
         )
     }
+
+    func forceUnwrap<T>() -> Binding<T> where Value == T? {
+        .init(
+            get: { self.wrappedValue! },
+            set: { self.wrappedValue = $0 }
+        )
+    }
 }
 
 public extension Binding where Value: Equatable & Sendable {
