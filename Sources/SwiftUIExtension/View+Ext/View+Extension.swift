@@ -1,7 +1,7 @@
 import SwiftUI
 
 public extension ViewModifier {
-    func then(_ body: (inout Self) -> Void) -> Self {
+    func transform(_ body: (inout Self) -> Void) -> Self {
         var result = self
 
         body(&result)
