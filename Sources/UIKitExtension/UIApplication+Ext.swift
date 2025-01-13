@@ -17,5 +17,12 @@
                 .filter(\.isKeyWindow)
                 .first
         }
+
+        @available(macCatalystApplicationExtension, unavailable)
+        @available(iOSApplicationExtension, unavailable)
+        @available(tvOSApplicationExtension, unavailable)
+        var topmostViewController: UIViewController? {
+            UIApplication.shared.activeKeyWindow?.rootViewController?.topmostViewController
+        }
     }
 #endif
