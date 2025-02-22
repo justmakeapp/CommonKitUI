@@ -27,6 +27,7 @@ public struct CustomEmptyView: View {
             VStack {
                 Text(title)
                     .font(.title3.weight(.bold))
+                    .multilineTextAlignment(.center)
 
                 description?
                     .font(.footnote)
