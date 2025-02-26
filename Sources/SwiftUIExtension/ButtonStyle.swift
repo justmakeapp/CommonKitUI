@@ -29,6 +29,8 @@ public extension ButtonStyle {
     }
 }
 
+// MARK: - PressEffectButtonStyle
+
 public struct PressEffectButtonStyle: ButtonStyle {
     let pressedScale: CGFloat
     public init(
@@ -42,5 +44,28 @@ public struct PressEffectButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? pressedScale : 1.0)
             .opacity(configuration.isPressed ? 0.6 : 1.0)
             .animation(.default, value: configuration.isPressed)
+    }
+}
+
+public extension ButtonStyle where Self == PressEffectButtonStyle {
+    static var pressEffect: PressEffectButtonStyle { .init() }
+}
+
+// MARK: - RoundedPrimaryButtonStyle
+
+public struct RoundedPrimaryButtonStyle: ViewModifier {
+    public var cornerRadius: CGFloat
+
+    public init(cornerRadius: CGFloat = 8) {
+        self.cornerRadius = cornerRadius
+    }
+
+    public func body(content: Content) -> some View {
+        content
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.horizontal)
+            .background(.tint)
+            .clipShape(.rect(cornerRadius: cornerRadius))
     }
 }
