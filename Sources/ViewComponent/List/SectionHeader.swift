@@ -26,13 +26,14 @@ public struct SectionHeader<TrailingButton: View>: View {
 
     public var body: some View {
         VStack(alignment: .leading) {
-            HStack(spacing: 6) {
-                Text(title)
-                    .font(config.titleFont)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                trailingButtonBuilder()
-            }
+            titleView
+                .modifier {
+                    if let action = config.onTitleTapped {
+                        $0.onTapGesture(perform: action)
+                    } else {
+                        $0
+                    }
+                }
 
             if let subtitle {
                 Text(subtitle)
@@ -43,15 +44,30 @@ public struct SectionHeader<TrailingButton: View>: View {
         }
         .fontWeight(.bold)
     }
+
+    private var titleView: some View {
+        HStack(spacing: 6) {
+            Text(title)
+                .font(config.titleFont)
+
+            trailingButtonBuilder()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
 }
 
 public extension SectionHeader {
     private struct Config {
         var titleFont: Font = .title2
+        var onTitleTapped: (() -> Void)?
     }
 
     func titleFont(_ font: Font) -> Self {
         transform { $0.config.titleFont = font }
+    }
+
+    func onTitleTapped(_ action: @escaping () -> Void) -> Self {
+        transform { $0.config.onTitleTapped = action }
     }
 }
 
