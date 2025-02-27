@@ -41,7 +41,6 @@ public struct SectionHeader<TrailingButton: View>: View {
                     .foregroundStyle(.secondary)
             }
         }
-
         .fontWeight(.bold)
     }
 }
