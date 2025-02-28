@@ -10,12 +10,18 @@ public struct EditorView: View {
     let title: String
     @Binding var text: String
 
-    @FocusState.Binding private var isFocused: Bool
+    @FocusState.Binding private var focusedField: String?
 
-    public init(title: String, text: Binding<String>, isFocused: FocusState<Bool>.Binding) {
+    private var config = Config()
+
+    public init(
+        title: String,
+        text: Binding<String>,
+        focusedField: FocusState<String?>.Binding
+    ) {
         self.title = title
         self._text = text
-        self._isFocused = isFocused
+        self._focusedField = focusedField
     }
 
     public var body: some View {
@@ -29,14 +35,17 @@ public struct EditorView: View {
                 .font(.title3)
             #endif
                 .scrollContentBackground(.hidden)
-                .focused($isFocused)
+                .focused($focusedField, equals: Self.focusedFieldId)
                 .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
+                    if focusedField == Self.focusedFieldId {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
 
-                        Button("", systemImage: "keyboard.chevron.compact.down") {
-                            withAnimation {
-                                isFocused = false
+                            Button("", systemImage: "keyboard.chevron.compact.down") {
+                                withAnimation {
+                                    focusedField = nil
+                                    config.onDismissKeyboard()
+                                }
                             }
                         }
                     }
@@ -65,12 +74,28 @@ public struct EditorView: View {
     }
 }
 
+public extension EditorView {
+    static let focusedFieldId = "ViewComponent.EditorView"
+
+    struct Config {
+        var onDismissKeyboard: () -> Void = {}
+    }
+
+    func onDismissKeyboard(_ action: @escaping () -> Void) -> Self {
+        transform { $0.config.onDismissKeyboard = action }
+    }
+}
+
 #if DEBUG
     private struct PreviewContentView: View {
-        @FocusState private var isFocused: Bool
+        @FocusState private var focusedField: String?
 
         var body: some View {
-            EditorView(title: "Placeholder", text: .constant(""), isFocused: $isFocused)
+            EditorView(
+                title: "Placeholder",
+                text: .constant(""),
+                focusedField: $focusedField
+            )
         }
     }
 
