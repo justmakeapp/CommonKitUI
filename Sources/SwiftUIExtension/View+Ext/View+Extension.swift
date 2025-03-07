@@ -131,6 +131,10 @@ public extension View {
         }
     }
 
+    func readSize(_ size: Binding<CGSize>) -> some View {
+        modifier(SizeReader(size: size))
+    }
+
     func readSize(onChange: @MainActor @escaping (CGSize) -> Void) -> some View {
         background(
             GeometryReader { geometryProxy in
@@ -174,6 +178,19 @@ public extension View {
         } else {
             self
         }
+    }
+}
+
+private struct SizeReader: ViewModifier {
+    @Binding var size: CGSize
+
+    func body(content: Content) -> some View {
+        content
+            .onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { newVal in
+                size = newVal
+            }
     }
 }
 
