@@ -28,10 +28,8 @@ public struct ScrollViewOffsetReader: ViewModifier {
                     value: geometry.frame(in: coordinateSpace).origin
                 )
             })
-            .onPreferenceChange(PreferenceKey.self) { position in
-                Task { @MainActor in
-                    self.position = position
-                }
+            .onPreferenceChange(PreferenceKey.self) { [$position] position in
+                $position.wrappedValue = position
             }
     }
 
