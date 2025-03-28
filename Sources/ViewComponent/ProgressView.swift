@@ -34,7 +34,7 @@ public struct ProgressView: View {
         switch config.style {
         case .bar:
             Rectangle()
-                .fill(config.progressColor)
+                .fill(.tint)
                 .frame(width: max(width * percentage, 0))
                 .cornerRadius(config.cornerRadius)
 
@@ -73,6 +73,7 @@ public extension ProgressView {
     private struct Configuration {
         var style: Style = .bar
         var progressColor: Color = .blue
+        var useTintAsProgressColor = true
         var trackColor: Color = .gray
         var cornerRadius = CGFloat(8)
         var lineWidth: CGFloat = 16
@@ -84,23 +85,27 @@ public extension ProgressView {
     }
 
     func style(_ value: Style) -> Self {
-        return transform { $0.config.style = value }
+        transform { $0.config.style = value }
     }
 
     func progressColor(_ value: Color) -> Self {
-        return transform { $0.config.progressColor = value }
+        transform { $0.config.progressColor = value }
+    }
+
+    func useTintAsProgressColor(_ value: Bool) -> Self {
+        transform { $0.config.useTintAsProgressColor = value }
     }
 
     func trackColor(_ value: Color) -> Self {
-        return transform { $0.config.trackColor = value }
+        transform { $0.config.trackColor = value }
     }
 
     func cornerRadius(_ value: CGFloat) -> Self {
-        return transform { $0.config.cornerRadius = value }
+        transform { $0.config.cornerRadius = value }
     }
 
     func lineWidth(_ value: CGFloat) -> Self {
-        return transform { $0.config.lineWidth = value }
+        transform { $0.config.lineWidth = value }
     }
 }
 
