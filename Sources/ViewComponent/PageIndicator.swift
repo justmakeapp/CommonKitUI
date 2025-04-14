@@ -73,7 +73,7 @@ private struct DotIndicator: View {
             .if(isSelected) {
                 $0.foregroundStyle(.tint)
             } else: {
-                $0.foregroundStyle(.separator.opacity(minOpacity))
+                $0.foregroundStyle(Color.gray.opacity(minOpacity))
             }
             .onTapGesture {
                 self.slectedPage = self.pageIndex
