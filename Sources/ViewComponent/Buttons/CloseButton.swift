@@ -21,6 +21,8 @@ import SwiftUI
 public struct CloseButton: View {
     let action: () -> Void
 
+    private var config = Config()
+
     public init(_ action: @escaping () -> Void) {
         self.action = action
     }
@@ -31,15 +33,35 @@ public struct CloseButton: View {
 
             action()
         }, label: {
-            Image(systemName: "xmark.circle.fill")
-                .font(.title)
-                .imageScale(.medium)
-                .foregroundColor(Color.secondary.opacity(0.6))
+            if let size = config.labelSize {
+                buttonLabel
+                    .frame(width: size.width, height: size.height)
+            } else {
+                buttonLabel
+            }
+
         })
         .buttonStyle(.plain)
         #if !os(watchOS)
             .keyboardShortcut(.cancelAction)
         #endif
+    }
+
+    private var buttonLabel: some View {
+        Image(systemName: "xmark.circle.fill")
+            .font(.title)
+            .imageScale(.medium)
+            .foregroundColor(Color.secondary.opacity(0.6))
+    }
+}
+
+public extension CloseButton {
+    struct Config {
+        var labelSize: CGSize?
+    }
+
+    func labelSize(_ size: CGSize?) -> some View {
+        transform { $0.config.labelSize = size }
     }
 }
 
