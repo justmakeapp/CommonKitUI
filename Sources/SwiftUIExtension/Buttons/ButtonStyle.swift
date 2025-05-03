@@ -50,22 +50,3 @@ public struct PressEffectButtonStyle: ButtonStyle {
 public extension ButtonStyle where Self == PressEffectButtonStyle {
     static var pressEffect: PressEffectButtonStyle { .init() }
 }
-
-// MARK: - RoundedPrimaryButtonStyle
-
-public struct RoundedPrimaryButtonStyle: ViewModifier {
-    public var cornerRadius: CGFloat
-
-    public init(cornerRadius: CGFloat = 8) {
-        self.cornerRadius = cornerRadius
-    }
-
-    public func body(content: Content) -> some View {
-        content
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.horizontal)
-            .background(.tint)
-            .clipShape(.rect(cornerRadius: cornerRadius))
-    }
-}
