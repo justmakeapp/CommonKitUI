@@ -11,7 +11,7 @@ import SwiftUI
     public typealias PlatformFont = UIFont
 #endif
 
-#if canImport(AppKit)
+#if canImport(AppKit) && !targetEnvironment(macCatalyst)
     public typealias PlatformFont = NSFont
 #endif
 
