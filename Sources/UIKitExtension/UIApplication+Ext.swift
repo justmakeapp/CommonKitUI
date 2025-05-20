@@ -11,7 +11,9 @@
     public extension UIApplication {
         var activeKeyWindow: UIWindow? {
             connectedScenes
-                .filter { $0.activationState == .foregroundActive }
+                // I disabled this because it return nil if the app is in background then comeback and expect to have a
+                // key window
+                // .filter { $0.activationState == .foregroundActive }
                 .compactMap { $0 as? UIWindowScene }
                 .flatMap(\.windows)
                 .filter(\.isKeyWindow)
