@@ -7,8 +7,8 @@ let package = Package(
     platforms: [
         .iOS(.v16),
         .macOS(.v13),
-        .visionOS(.v2),
-        .watchOS(.v10)
+        .visionOS(.v1),
+        .watchOS(.v9)
     ],
     products: [
         .library(name: "CoreGraphicsExt", targets: ["CoreGraphicsExt"]),

@@ -30,46 +30,48 @@ public struct EditorView: View {
 
     private var contentView: some View {
         ZStack {
-            TextEditor(text: $text)
-            #if os(macOS)
-                .font(.title3)
-            #endif
-                .scrollContentBackground(.hidden)
-                .focused($focusedField, equals: Self.focusedFieldId)
-                .toolbar {
-                    if focusedField == Self.focusedFieldId {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
+            #if os(macOS) || os(iOS)
+                TextEditor(text: $text)
+                #if os(macOS)
+                    .font(.title3)
+                #endif
+                    .scrollContentBackground(.hidden)
+                    .focused($focusedField, equals: Self.focusedFieldId)
+                    .toolbar {
+                        if focusedField == Self.focusedFieldId {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()
 
-                            Button("", systemImage: "keyboard.chevron.compact.down") {
-                                withAnimation {
-                                    focusedField = nil
-                                    config.onDismissKeyboard()
+                                Button("", systemImage: "keyboard.chevron.compact.down") {
+                                    withAnimation {
+                                        focusedField = nil
+                                        config.onDismissKeyboard()
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-            if text.isEmpty {
-                VStack {
-                    HStack {
-                        Text(title)
-                        #if os(macOS)
-                            .font(.title3)
-                        #endif
-                            .foregroundStyle(.tertiary)
-                        #if os(iOS)
-                            .padding(.top, 8)
-                        #endif
-                            .padding(.leading, 5)
+                if text.isEmpty {
+                    VStack {
+                        HStack {
+                            Text(title)
+                            #if os(macOS)
+                                .font(.title3)
+                            #endif
+                                .foregroundStyle(.tertiary)
+                            #if os(iOS)
+                                .padding(.top, 8)
+                            #endif
+                                .padding(.leading, 5)
+
+                            Spacer()
+                        }
 
                         Spacer()
                     }
-
-                    Spacer()
                 }
-            }
+            #endif
         }
     }
 }

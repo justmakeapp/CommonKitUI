@@ -6,11 +6,9 @@
 //
 
 import SwiftUI
-#if canImport(UIKit)
+#if os(iOS)
     import UIKit
-#endif
 
-#if canImport(UIKit)
     public struct ShareSheetView: UIViewControllerRepresentable {
         public typealias Callback = (
             _ activityType: UIActivity.ActivityType?,

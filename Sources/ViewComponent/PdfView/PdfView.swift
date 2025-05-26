@@ -13,7 +13,9 @@ import SwiftUI
     import AppKit
 #endif
 
-import PDFKit
+#if canImport(PDFKit)
+    import PDFKit
+#endif
 
 public struct PdfKitView {
     let url: URL
