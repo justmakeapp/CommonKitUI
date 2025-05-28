@@ -11,9 +11,9 @@
     import UIKit
 
     public class UIEmojiTextField: UITextField {
-        override public var textInputMode: UITextInputMode? {
-            .activeInputModes.first(where: { $0.primaryLanguage == "emoji" })
-        }
+//        override public var textInputMode: UITextInputMode? {
+//            .activeInputModes.first(where: { $0.primaryLanguage == "emoji" })
+//        }
 
         override public func caretRect(for _: UITextPosition) -> CGRect {
             return CGRect.zero
@@ -33,6 +33,10 @@
             let emojiTextField = UIEmojiTextField()
             emojiTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             emojiTextField.placeholder = placeholder
+
+            // https://x.com/SebJVidal/status/1813900137728762026
+            emojiTextField.keyboardType = UIKeyboardType(rawValue: 124) ?? .default
+
             emojiTextField.text = text
             emojiTextField.delegate = context.coordinator
             emojiTextField.font = UIFont(name: "HelveticaNeue", size: 50)
