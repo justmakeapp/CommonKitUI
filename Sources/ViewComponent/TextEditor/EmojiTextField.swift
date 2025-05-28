@@ -5,9 +5,10 @@
 //  Created by Long Vu on 28/5/25.
 //
 
+import Foundation
+import SwiftUI
+
 #if os(iOS)
-    import Foundation
-    import SwiftUI
     import UIKit
 
     public class UIEmojiTextField: UITextField {
@@ -67,5 +68,87 @@
                 }
             }
         }
+    }
+#endif
+
+#if os(macOS)
+    import AppKit
+
+    struct EmojiTextField: NSViewRepresentable {
+        @Binding var text: String
+        var placeholder: String = ""
+
+        func makeCoordinator() -> Coordinator {
+            Coordinator(self)
+        }
+
+        func makeNSView(context: Context) -> NSTextField {
+            let textField = FocusAwareTextField()
+            textField.delegate = context.coordinator
+            textField.placeholderString = placeholder
+            textField.isBordered = false
+            textField.isBezeled = false
+            textField.isEditable = true
+            textField.isSelectable = true
+            textField.focusRingType = .none
+            textField.backgroundColor = .clear
+            textField.font = .systemFont(ofSize: 50)
+
+            return textField
+        }
+
+        func updateNSView(_ nsView: NSTextField, context _: Context) {
+            if nsView.stringValue != text {
+                nsView.stringValue = text
+            }
+        }
+
+        class Coordinator: NSObject, NSTextFieldDelegate {
+            var parent: EmojiTextField
+
+            init(_ parent: EmojiTextField) {
+                self.parent = parent
+            }
+
+            func controlTextDidChange(_ obj: Notification) {
+                if let field = obj.object as? NSTextField {
+                    parent.text = field.stringValue
+                }
+            }
+        }
+    }
+
+    private class FocusAwareTextField: NSTextField {
+        var onFocus: () -> Void
+        var onUnfocus: () -> Void
+
+        init(onFocus: @escaping () -> Void = {}, onUnfocus: @escaping () -> Void = {}) {
+            self.onFocus = onFocus
+            self.onUnfocus = onUnfocus
+            super.init(frame: .zero)
+        }
+
+        @available(*, unavailable)
+        required init?(coder _: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        override func becomeFirstResponder() -> Bool {
+            onFocus()
+            let textView = window?.fieldEditor(true, for: nil) as? NSTextView
+            textView?.insertionPointColor = .clear
+
+            return super.becomeFirstResponder()
+        }
+
+        override func resignFirstResponder() -> Bool {
+            onUnfocus()
+            return super.resignFirstResponder()
+        }
+
+//    override func selectText(_ sender: Any?) {
+//          // Override and do nothing
+//
+//      }
     }
 #endif
