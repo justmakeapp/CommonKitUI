@@ -5,7 +5,7 @@
 //  Created by Long Vu on 18/8/24.
 //
 
-#if canImport(UIKit)
+#if os(iOS)
     import UIKit
 
     public extension UIView {

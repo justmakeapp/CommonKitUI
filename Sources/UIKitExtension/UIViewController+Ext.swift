@@ -5,7 +5,7 @@
 //  Created by Long Vu on 13/1/25.
 //
 
-#if canImport(UIKit)
+#if os(iOS)
     import UIKit
 
     public extension UIViewController {
