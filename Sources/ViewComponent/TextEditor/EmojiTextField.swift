@@ -74,15 +74,20 @@ import SwiftUI
 #if os(macOS)
     import AppKit
 
-    struct EmojiTextField: NSViewRepresentable {
+    public struct EmojiTextField: NSViewRepresentable {
         @Binding var text: String
         var placeholder: String = ""
 
-        func makeCoordinator() -> Coordinator {
+        public init(text: Binding<String>, placeholder: String = "") {
+            self._text = text
+            self.placeholder = placeholder
+        }
+
+        public func makeCoordinator() -> Coordinator {
             Coordinator(self)
         }
 
-        func makeNSView(context: Context) -> NSTextField {
+        public func makeNSView(context: Context) -> NSTextField {
             let textField = FocusAwareTextField()
             textField.delegate = context.coordinator
             textField.placeholderString = placeholder
@@ -97,20 +102,20 @@ import SwiftUI
             return textField
         }
 
-        func updateNSView(_ nsView: NSTextField, context _: Context) {
+        public func updateNSView(_ nsView: NSTextField, context _: Context) {
             if nsView.stringValue != text {
                 nsView.stringValue = text
             }
         }
 
-        class Coordinator: NSObject, NSTextFieldDelegate {
+        public class Coordinator: NSObject, NSTextFieldDelegate {
             var parent: EmojiTextField
 
             init(_ parent: EmojiTextField) {
                 self.parent = parent
             }
 
-            func controlTextDidChange(_ obj: Notification) {
+            public func controlTextDidChange(_ obj: Notification) {
                 if let field = obj.object as? NSTextField {
                     parent.text = field.stringValue
                 }
