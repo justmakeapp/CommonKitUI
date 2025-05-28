@@ -24,10 +24,16 @@ import SwiftUI
     public struct EmojiTextField: UIViewRepresentable {
         @Binding var text: String
         var placeholder: String
+        var fontSize: CGFloat
 
-        public init(text: Binding<String>, placeholder: String = "") {
+        public init(
+            text: Binding<String>,
+            placeholder: String = "",
+            fontSize: CGFloat
+        ) {
             self._text = text
             self.placeholder = placeholder
+            self.fontSize = fontSize
         }
 
         public func makeUIView(context: Context) -> UIEmojiTextField {
@@ -40,7 +46,7 @@ import SwiftUI
 
             emojiTextField.text = text
             emojiTextField.delegate = context.coordinator
-            emojiTextField.font = UIFont(name: "HelveticaNeue", size: 50)
+            emojiTextField.font = .systemFont(ofSize: fontSize)
             emojiTextField.textAlignment = .center
             emojiTextField.endFloatingCursor()
             emojiTextField.becomeFirstResponder()
@@ -77,10 +83,16 @@ import SwiftUI
     public struct EmojiTextField: NSViewRepresentable {
         @Binding var text: String
         var placeholder: String = ""
+        var fontSize: CGFloat
 
-        public init(text: Binding<String>, placeholder: String = "") {
+        public init(
+            text: Binding<String>,
+            placeholder: String = "",
+            fontSize: CGFloat
+        ) {
             self._text = text
             self.placeholder = placeholder
+            self.fontSize = fontSize
         }
 
         public func makeCoordinator() -> Coordinator {
@@ -97,7 +109,7 @@ import SwiftUI
             textField.isSelectable = true
             textField.focusRingType = .none
             textField.backgroundColor = .clear
-            textField.font = .systemFont(ofSize: 50)
+            textField.font = .systemFont(ofSize: fontSize)
 
             return textField
         }
