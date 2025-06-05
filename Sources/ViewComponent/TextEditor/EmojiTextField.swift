@@ -114,9 +114,9 @@ import SwiftUI
             return textField
         }
 
-        public func updateNSView(_ nsView: NSTextField, context _: Context) {
-            if nsView.stringValue != text {
-                nsView.stringValue = text
+        public func updateNSView(_ textField: NSTextField, context _: Context) {
+            if textField.stringValue != text {
+                textField.stringValue = text
             }
         }
 
@@ -151,21 +151,27 @@ import SwiftUI
         }
 
         override func becomeFirstResponder() -> Bool {
-            onFocus()
-            let textView = window?.fieldEditor(true, for: nil) as? NSTextView
-            textView?.insertionPointColor = .clear
+            let success = super.becomeFirstResponder()
 
-            return super.becomeFirstResponder()
+            onFocus()
+
+            if let textView = window?.fieldEditor(true, for: nil) as? NSTextView {
+                textView.insertionPointColor = .clear
+
+                // Ditch the highlight on the text.
+                let zeroRange = NSRange(location: 0, length: 0)
+                textView.setSelectedRange(zeroRange)
+
+                // Move cursor to the end of the line.
+                textView.moveToEndOfLine(nil)
+            }
+
+            return success
         }
 
         override func resignFirstResponder() -> Bool {
             onUnfocus()
             return super.resignFirstResponder()
         }
-
-//    override func selectText(_ sender: Any?) {
-//          // Override and do nothing
-//
-//      }
     }
 #endif
