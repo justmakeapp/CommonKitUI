@@ -49,7 +49,7 @@ import SwiftUI
             emojiTextField.font = .systemFont(ofSize: fontSize)
             emojiTextField.textAlignment = .center
             emojiTextField.endFloatingCursor()
-            emojiTextField.becomeFirstResponder()
+
             return emojiTextField
         }
 
