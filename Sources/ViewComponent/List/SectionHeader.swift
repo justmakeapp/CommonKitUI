@@ -53,6 +53,7 @@ public struct SectionHeader<TrailingButton: View>: View {
             trailingButtonBuilder()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(.rect)
     }
 }
 
