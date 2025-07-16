@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftUIExtension
 
 public struct CustomNavigationTitleView: View {
     let title: String
+
+    private var config = Config()
 
     public init(_ title: String) {
         self.title = title
@@ -18,8 +21,18 @@ public struct CustomNavigationTitleView: View {
         Text(title)
             .font(.title)
             .fontWeight(.semibold)
-            .lineLimit(2)
+            .lineLimit(config.lineLimit)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+public extension CustomNavigationTitleView {
+    struct Config {
+        var lineLimit: Int? = 2
+    }
+
+    func lineLimit(_ limit: Int?) -> Self {
+        transform { $0.config.lineLimit = limit }
     }
 }
