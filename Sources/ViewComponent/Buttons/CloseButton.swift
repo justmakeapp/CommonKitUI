@@ -33,17 +33,25 @@ public struct CloseButton: View {
     private var buttonLabel: some View {
         Group {
             if #available(iOS 26.0, macOS 26.0, watchOS 26.0, *) {
-                Image(systemName: "xmark")
-                    .font(.title3)
-                    .imageScale(.medium)
-                    .foregroundColor(Color.primary)
+                #if swift(>=6.2)
+                    Image(systemName: "xmark")
+                        .font(.title3)
+                        .imageScale(.medium)
+                        .foregroundColor(Color.primary)
+                #else
+                    beforeXcode26ButtonLabel
+                #endif
             } else {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title)
-                    .imageScale(.medium)
-                    .foregroundColor(Color.secondary.opacity(0.6))
+                beforeXcode26ButtonLabel
             }
         }
+    }
+
+    private var beforeXcode26ButtonLabel: some View {
+        Image(systemName: "xmark.circle.fill")
+            .font(.title)
+            .imageScale(.medium)
+            .foregroundColor(Color.secondary.opacity(0.6))
     }
 }
 
