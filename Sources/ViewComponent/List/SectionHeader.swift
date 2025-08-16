@@ -42,7 +42,6 @@ public struct SectionHeader<TrailingButton: View>: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .fontWeight(.bold)
     }
 
     private var titleView: some View {
@@ -52,6 +51,7 @@ public struct SectionHeader<TrailingButton: View>: View {
 
             trailingButtonBuilder()
         }
+        .fontWeight(config.titleFontWeight)
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)
     }
@@ -60,11 +60,16 @@ public struct SectionHeader<TrailingButton: View>: View {
 public extension SectionHeader {
     private struct Config {
         var titleFont: Font = .title2
+        var titleFontWeight: Font.Weight = .bold
         var onTitleTapped: (() -> Void)?
     }
 
     func titleFont(_ font: Font) -> Self {
         transform { $0.config.titleFont = font }
+    }
+
+    func titleFontWeight(_ weight: Font.Weight) -> Self {
+        transform { $0.config.titleFontWeight = weight }
     }
 
     func onTitleTapped(_ action: @escaping () -> Void) -> Self {
