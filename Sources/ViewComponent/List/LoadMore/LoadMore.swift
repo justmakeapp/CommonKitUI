@@ -8,7 +8,8 @@
 import Combine
 import Foundation
 
-public protocol LoadMore: ObservableObject {
+@MainActor
+public protocol LoadMore: AnyObject {
     var pageSize: Int { get set }
     var isLoadMore: Bool { get set }
     var canLoadMore: Bool { get set }

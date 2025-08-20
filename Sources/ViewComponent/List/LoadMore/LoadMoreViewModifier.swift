@@ -10,7 +10,7 @@ import SwiftUI
 public struct LoadMoreViewModifier<T: Equatable, LoadMoreObject: LoadMore>: ViewModifier {
     let item: T
     let lastItem: T?
-    @ObservedObject var loadMoreObject: LoadMoreObject
+    var loadMoreObject: LoadMoreObject
 
     public init(item: T, lastItem: T?, loadMoreObject: LoadMoreObject) {
         self.item = item
@@ -30,20 +30,26 @@ public struct LoadMoreViewModifier<T: Equatable, LoadMoreObject: LoadMore>: View
     }
 }
 
-public struct LoadMoreIndicator<LoadMoreObject: LoadMore>: View {
-    @ObservedObject var loadMoreObject: LoadMoreObject
+public struct LoadMoreIndicator: View {
+    let isLoadMore: Bool
+    let reachEnd: Bool
     let reachEndText: String
 
-    public init(loadMoreObject: LoadMoreObject, reachEndText: String = "All out") {
-        self.loadMoreObject = loadMoreObject
+    public init(
+        isLoadMore: Bool,
+        reachEnd: Bool,
+        reachEndText: String = "All out"
+    ) {
+        self.isLoadMore = isLoadMore
+        self.reachEnd = reachEnd
         self.reachEndText = reachEndText
     }
 
     public var body: some View {
-        if loadMoreObject.isLoadMore {
+        if isLoadMore {
             SwiftUI.ProgressView()
                 .padding()
-        } else if loadMoreObject.reachEnd {
+        } else if reachEnd {
             Text(reachEndText)
                 .foregroundStyle(.secondary)
                 .padding()
