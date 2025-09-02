@@ -91,7 +91,6 @@ private struct DebounceModifier<Value: Equatable>: ViewModifier {
             of: value,
             initial: initial
         ) { oldValue, newValue in
-
             currentTask.wrappedValue?.cancel()
             currentTask.wrappedValue = Task {
                 try? await Task.sleep(for: delay)

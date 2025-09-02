@@ -17,7 +17,7 @@ public protocol LoadMore: AnyObject {
 
     static var pageSizeStep: Int { get }
 
-    func makeCanLoadMorePublisher<T: Equatable>(_ data: AnyPublisher<[T], Never>) -> AnyPublisher<Bool, Never>
+    func makeCanLoadMorePublisher(_ data: AnyPublisher<[some Equatable], Never>) -> AnyPublisher<Bool, Never>
 
     @MainActor
     func loadMore() async
