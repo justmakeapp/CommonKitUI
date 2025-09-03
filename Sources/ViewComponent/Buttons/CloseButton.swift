@@ -33,7 +33,7 @@ public struct CloseButton: View {
     private var buttonLabel: some View {
         Group {
             if #available(iOS 26.0, macOS 26.0, watchOS 26.0, *) {
-                #if swift(>=6.2)
+                #if compiler(>=6.2)
                     Image(systemName: "xmark")
                         .font(.title3)
                         .imageScale(.medium)
