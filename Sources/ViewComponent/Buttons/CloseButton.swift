@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIExtension
 
 public struct CloseButton: View {
     let action: () -> Void
@@ -23,7 +24,7 @@ public struct CloseButton: View {
             }
 
         })
-        .buttonStyle(.plain)
+        .buttonStyle(config.buttonStyle)
         #if !os(watchOS)
             .keyboardShortcut(.cancelAction)
         #endif
@@ -56,12 +57,18 @@ public struct CloseButton: View {
 }
 
 public extension CloseButton {
+    @MainActor
     struct Config {
         var labelSize: CGSize?
+        var buttonStyle: AnyPrimitiveButtonStyle = .init(style: .plain)
     }
 
     func labelSize(_ size: CGSize?) -> some View {
         transform { $0.config.labelSize = size }
+    }
+
+    func customButtonStyle(_ style: some PrimitiveButtonStyle) -> some View {
+        transform { $0.config.buttonStyle = .init(style: style) }
     }
 }
 
