@@ -63,11 +63,11 @@ public extension CloseButton {
         var buttonStyle: AnyPrimitiveButtonStyle = .init(style: .plain)
     }
 
-    func labelSize(_ size: CGSize?) -> some View {
+    func labelSize(_ size: CGSize?) -> Self {
         transform { $0.config.labelSize = size }
     }
 
-    func customButtonStyle(_ style: some PrimitiveButtonStyle) -> some View {
+    func customButtonStyle(_ style: some PrimitiveButtonStyle) -> Self {
         transform { $0.config.buttonStyle = .init(style: style) }
     }
 }
