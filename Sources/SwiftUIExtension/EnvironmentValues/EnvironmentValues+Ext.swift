@@ -10,4 +10,7 @@ import SwiftUI
 public extension EnvironmentValues {
     @Entry
     var safeAreaInsets: EdgeInsets = .init()
+    
+    @Entry
+    var isPreview = false
 }
