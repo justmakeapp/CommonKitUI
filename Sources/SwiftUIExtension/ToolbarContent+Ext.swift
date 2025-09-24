@@ -70,4 +70,10 @@ public extension ToolbarContent {
 
         return result
     }
+
+    func modifier<ModifiedContent: ToolbarContent>(
+        @ToolbarContentBuilder body: (_ content: Self) -> ModifiedContent
+    ) -> ModifiedContent {
+        body(self)
+    }
 }
