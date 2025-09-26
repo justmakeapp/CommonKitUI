@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import SwiftUIExtension
 
 public struct CustomEmptyView: View {
     private let title: String
     private let systemImage: String
     private let description: Text?
+
+    private var config = Config()
 
     public init(_ title: String, systemImage: String = "tray", description: Text? = nil) {
         self.title = title
@@ -21,6 +24,8 @@ public struct CustomEmptyView: View {
     public var body: some View {
         VStack(spacing: 12) {
             Image(systemName: systemImage)
+                .symbolRenderingMode(config.symbolRenderingMode)
+                .symbolRenderingMode(.hierarchical)
                 .font(.largeTitle.weight(.semibold))
                 .imageScale(.large)
 
@@ -37,5 +42,15 @@ public struct CustomEmptyView: View {
         }
         .foregroundColor(.secondary)
         .padding()
+    }
+}
+
+public extension CustomEmptyView {
+    struct Config {
+        var symbolRenderingMode: SymbolRenderingMode?
+    }
+
+    func symbolRenderingMode(_ mode: SymbolRenderingMode?) -> CustomEmptyView {
+        transform { $0.config.symbolRenderingMode = mode }
     }
 }
