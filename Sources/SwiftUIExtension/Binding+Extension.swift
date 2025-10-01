@@ -45,6 +45,13 @@ public extension Binding where Value: Sendable {
             set: { self.wrappedValue = $0 }
         )
     }
+
+    func nilCoalescing<T>(fallbackValue: T) -> Binding<T> where Value == T? {
+        .init(
+            get: { self.wrappedValue ?? fallbackValue },
+            set: { self.wrappedValue = $0 }
+        )
+    }
 }
 
 public extension Binding where Value: Equatable & Sendable {
