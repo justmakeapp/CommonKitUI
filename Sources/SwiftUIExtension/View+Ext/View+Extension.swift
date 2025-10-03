@@ -10,6 +10,19 @@ public extension ViewModifier {
     }
 }
 
+public struct BuildPlatform: OptionSet, Sendable {
+    public let rawValue: Int
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    public static let iPad = BuildPlatform(rawValue: 1 << 0)
+    public static let iPhone = BuildPlatform(rawValue: 1 << 1)
+    public static let mac = BuildPlatform(rawValue: 1 << 2)
+    public static let macCatalyst = BuildPlatform(rawValue: 1 << 3)
+}
+
 public extension View {
     @ViewBuilder
     func buildView(
@@ -91,6 +104,36 @@ public extension View {
     ) -> some View {
         #if !targetEnvironment(macCatalyst) && !os(macOS)
             viewBuilder()
+        #endif
+    }
+
+    @ToolbarContentBuilder
+    func buildToolbarContent(
+        for platforms: BuildPlatform,
+        @ToolbarContentBuilder content: () -> some ToolbarContent
+    ) -> some ToolbarContent {
+        #if os(iOS)
+            #if targetEnvironment(macCatalyst)
+                if platforms.contains(.macCatalyst) {
+                    content()
+                }
+            #else
+                let conditions: [Bool] = [
+                    platforms.isSuperset(of: [.iPad, .iPhone]),
+                    platforms.contains(.iPad) && UIDevice.current.userInterfaceIdiom == .pad,
+                    platforms.contains(.iPhone) && UIDevice.current.userInterfaceIdiom == .phone
+                ]
+                if conditions.contains(where: { $0 }) {
+                    content()
+                }
+
+            #endif
+        #elseif os(macOS)
+            if platforms.contains(.mac) {
+                content()
+            }
+        #else
+            fatalError("Unsupported platform")
         #endif
     }
 }
