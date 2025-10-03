@@ -7,12 +7,16 @@
 
 import SwiftUI
 
-public struct ProgressView: View {
+public struct CustomProgressView: View {
     private let percentage: Double
     private var config: Configuration = .init()
 
-    public init(percentage: Double) {
-        self.percentage = percentage
+    public init(value: Double, total: Double) {
+        self.percentage = total == 0 ? 0 : min(max(value / total, 0), 1)
+    }
+
+    public init(_ progress: Double) {
+        self.percentage = progress
     }
 
     public var body: some View {
@@ -69,12 +73,12 @@ public struct ProgressView: View {
     }
 }
 
-public extension ProgressView {
+public extension CustomProgressView {
     private struct Configuration {
         var style: Style = .bar
-        var progressColor: Color = .blue
+        var progressColor: Color = .accentColor
         var useTintAsProgressColor = true
-        var trackColor: Color = .gray
+        var trackColor: Color = .secondary.opacity(0.2)
         var cornerRadius = CGFloat(8)
         var lineWidth: CGFloat = 16
     }
@@ -111,10 +115,10 @@ public extension ProgressView {
 
 #Preview {
     VStack {
-        ProgressView(percentage: 0.3)
+        CustomProgressView(0.3)
             .frame(height: 10)
 
-        ProgressView(percentage: 0.3)
+        CustomProgressView(0.3)
             .style(.circular)
             .frame(width: 160, height: 160)
     }
