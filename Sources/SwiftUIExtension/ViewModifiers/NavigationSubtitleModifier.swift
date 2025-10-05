@@ -16,13 +16,15 @@ public struct NavigationSubtitleModifier: ViewModifier {
 
     public func body(content: Content) -> some View {
         content
-            .modifier {
-                if #available(iOS 26.0, macOS 26.0, watchOS 26.0, *), let subtitle {
-                    $0.navigationSubtitle(subtitle)
-                } else {
-                    $0
-                }
+        #if os(iOS) || os(macOS)
+        .modifier {
+            if #available(iOS 26.0, macOS 26.0, *), let subtitle {
+                $0.navigationSubtitle(subtitle)
+            } else {
+                $0
             }
+        }
+        #endif
     }
 }
 
