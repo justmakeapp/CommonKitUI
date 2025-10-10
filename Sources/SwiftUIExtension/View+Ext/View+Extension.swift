@@ -26,84 +26,29 @@ public struct BuildPlatform: OptionSet, Sendable {
 public extension View {
     @ViewBuilder
     func buildView(
-        @ViewBuilder macBuilder: () -> some View,
-        @ViewBuilder nonMacBuilder: () -> some View
+        for platforms: BuildPlatform,
+        @ViewBuilder content: () -> some View
     ) -> some View {
-        #if targetEnvironment(macCatalyst) || os(macOS)
-            macBuilder()
+        #if os(iOS)
+            #if targetEnvironment(macCatalyst)
+                if platforms.contains(.macCatalyst) {
+                    content()
+                }
+            #else
+                let ipad = platforms.contains(.iPad) && UIDevice.current.userInterfaceIdiom == .pad
+                let iPhone = platforms.contains(.iPhone) && UIDevice.current.userInterfaceIdiom == .phone
+
+                if ipad || iPhone {
+                    content()
+                }
+
+            #endif
+        #elseif os(macOS)
+            if platforms.contains(.mac) {
+                content()
+            }
         #else
-            nonMacBuilder()
-        #endif
-    }
-
-    @ViewBuilder
-    func buildView(
-        @ViewBuilder onMac: () -> some View,
-        @ViewBuilder onPad: () -> some View,
-        @ViewBuilder onPhone: () -> some View
-    ) -> some View {
-        #if targetEnvironment(macCatalyst) || os(macOS)
-            onMac()
-        #endif
-
-        #if os(iOS)
-            switch UIDevice.current.userInterfaceIdiom {
-            case .pad:
-                onPad()
-            case .phone:
-                onPhone()
-            default:
-                EmptyView()
-            }
-        #endif
-    }
-
-    @ViewBuilder
-    func buildPadView(
-        @ViewBuilder viewBuilder: () -> some View
-    ) -> some View {
-        #if os(iOS)
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                viewBuilder()
-            }
-        #endif
-    }
-
-    @ViewBuilder
-    func buildPhoneView(
-        @ViewBuilder viewBuilder: () -> some View
-    ) -> some View {
-        #if os(iOS)
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                viewBuilder()
-            }
-        #endif
-    }
-
-    @ViewBuilder
-    func buildPhoneAndPadView(
-        @ViewBuilder viewBuilder: () -> some View
-    ) -> some View {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
-            viewBuilder()
-        #endif
-    }
-
-    @ViewBuilder
-    func buildMacView(
-        @ViewBuilder viewBuilder: () -> some View
-    ) -> some View {
-        #if targetEnvironment(macCatalyst) || os(macOS)
-            viewBuilder()
-        #endif
-    }
-
-    @ViewBuilder
-    func buildNonMacView(
-        @ViewBuilder viewBuilder: () -> some View
-    ) -> some View {
-        #if !targetEnvironment(macCatalyst) && !os(macOS)
-            viewBuilder()
+            fatalError("Unsupported platform")
         #endif
     }
 
@@ -118,12 +63,10 @@ public extension View {
                     content()
                 }
             #else
-                let conditions: [Bool] = [
-                    platforms.isSuperset(of: [.iPad, .iPhone]),
-                    platforms.contains(.iPad) && UIDevice.current.userInterfaceIdiom == .pad,
-                    platforms.contains(.iPhone) && UIDevice.current.userInterfaceIdiom == .phone
-                ]
-                if conditions.contains(where: { $0 }) {
+                let ipad = platforms.contains(.iPad) && UIDevice.current.userInterfaceIdiom == .pad
+                let iPhone = platforms.contains(.iPhone) && UIDevice.current.userInterfaceIdiom == .phone
+
+                if ipad || iPhone {
                     content()
                 }
 
