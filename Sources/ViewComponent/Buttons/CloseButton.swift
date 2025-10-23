@@ -15,15 +15,14 @@ public struct CloseButton: View {
             if #available(iOS 26.0, macOS 26.0, watchOS 26.0, *) {
                 Button(role: .close, action: buttonTapped)
             } else {
-                Button(action: buttonTapped, label: {
+                Button(action: buttonTapped) {
                     if let size = config.labelSize {
                         buttonLabel
                             .frame(width: size.width, height: size.height)
                     } else {
                         buttonLabel
                     }
-
-                })
+                }
             }
         }
         #if !os(watchOS)
@@ -40,10 +39,16 @@ public struct CloseButton: View {
 
     @ViewBuilder
     private var buttonLabel: some View {
-        Image(systemName: "xmark.circle.fill")
-            .font(.title)
-            .imageScale(.medium)
-            .foregroundColor(Color.secondary.opacity(0.6))
+        #if os(macOS)
+            Text(config.title)
+        #endif
+
+        #if os(iOS)
+            Image(systemName: "xmark.circle.fill")
+                .font(.title)
+                .imageScale(.medium)
+                .foregroundColor(Color.secondary.opacity(0.6))
+        #endif
     }
 
     private func buttonTapped() {
@@ -56,8 +61,13 @@ public struct CloseButton: View {
 public extension CloseButton {
     @MainActor
     struct Config {
+        var title: String = "Close"
         var labelSize: CGSize?
         var buttonStyle: AnyPrimitiveButtonStyle?
+    }
+
+    func title(_ value: String) -> Self {
+        transform { $0.config.title = value }
     }
 
     func labelSize(_ size: CGSize?) -> Self {
