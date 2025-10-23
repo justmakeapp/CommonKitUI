@@ -11,48 +11,45 @@ public struct CloseButton: View {
     }
 
     public var body: some View {
-        Button(action: {
-            FeedbackManager.selectionChangedFeedback()
-
-            action()
-        }, label: {
-            if let size = config.labelSize {
-                buttonLabel
-                    .frame(width: size.width, height: size.height)
-            } else {
-                buttonLabel
-            }
-
-        })
-        .buttonStyle(config.buttonStyle)
-        #if !os(watchOS)
-            .keyboardShortcut(.cancelAction)
-        #endif
-    }
-
-    @ViewBuilder
-    private var buttonLabel: some View {
         Group {
             if #available(iOS 26.0, macOS 26.0, watchOS 26.0, *) {
-                #if compiler(>=6.2)
-                    Image(systemName: "xmark")
-                        .font(.title3)
-                        .imageScale(.medium)
-                        .foregroundColor(Color.primary)
-                #else
-                    beforeXcode26ButtonLabel
-                #endif
+                Button(role: .close, action: buttonTapped)
             } else {
-                beforeXcode26ButtonLabel
+                Button(action: buttonTapped, label: {
+                    if let size = config.labelSize {
+                        buttonLabel
+                            .frame(width: size.width, height: size.height)
+                    } else {
+                        buttonLabel
+                    }
+
+                })
+            }
+        }
+        #if !os(watchOS)
+        .keyboardShortcut(.cancelAction)
+        #endif
+        .modifier {
+            if let buttonStyle = config.buttonStyle {
+                $0.buttonStyle(buttonStyle)
+            } else {
+                $0
             }
         }
     }
 
-    private var beforeXcode26ButtonLabel: some View {
+    @ViewBuilder
+    private var buttonLabel: some View {
         Image(systemName: "xmark.circle.fill")
             .font(.title)
             .imageScale(.medium)
             .foregroundColor(Color.secondary.opacity(0.6))
+    }
+
+    private func buttonTapped() {
+        FeedbackManager.selectionChangedFeedback()
+
+        action()
     }
 }
 
@@ -60,7 +57,7 @@ public extension CloseButton {
     @MainActor
     struct Config {
         var labelSize: CGSize?
-        var buttonStyle: AnyPrimitiveButtonStyle = .init(style: .plain)
+        var buttonStyle: AnyPrimitiveButtonStyle?
     }
 
     func labelSize(_ size: CGSize?) -> Self {
@@ -78,11 +75,12 @@ public extension CloseButton {
             CloseButton {}
         }
         .toolbar {
-            #if os(iOS)
-                ToolbarItem(placement: .topBarLeading) {
-                    CloseButton {}
-                }
-            #endif
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton {}
+            }
         }
     }
+    #if os(macOS)
+    .frame(width: 400, height: 300)
+    #endif
 }
