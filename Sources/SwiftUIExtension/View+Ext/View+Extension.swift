@@ -21,6 +21,7 @@ public struct BuildPlatform: OptionSet, Sendable {
     public static let iPhone = BuildPlatform(rawValue: 1 << 1)
     public static let mac = BuildPlatform(rawValue: 1 << 2)
     public static let macCatalyst = BuildPlatform(rawValue: 1 << 3)
+    public static let watch = BuildPlatform(rawValue: 1 << 4)
 }
 
 public extension View {
@@ -45,6 +46,10 @@ public extension View {
             #endif
         #elseif os(macOS)
             if platforms.contains(.mac) {
+                content()
+            }
+        #elseif os(watchOS)
+            if platforms.contains(.watch) {
                 content()
             }
         #else
@@ -73,6 +78,10 @@ public extension View {
             #endif
         #elseif os(macOS)
             if platforms.contains(.mac) {
+                content()
+            }
+        #elseif os(watchOS)
+            if platforms.contains(.watch) {
                 content()
             }
         #else
