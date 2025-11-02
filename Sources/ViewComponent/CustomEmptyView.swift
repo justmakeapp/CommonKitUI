@@ -25,7 +25,6 @@ public struct CustomEmptyView: View {
         VStack(spacing: 12) {
             Image(systemName: systemImage)
                 .symbolRenderingMode(config.symbolRenderingMode)
-                .symbolRenderingMode(.hierarchical)
                 .font(.largeTitle.weight(.semibold))
                 .imageScale(.large)
 
