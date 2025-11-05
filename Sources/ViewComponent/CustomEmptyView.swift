@@ -32,6 +32,7 @@ public struct CustomEmptyView: View {
                 Text(title)
                     .font(.title3.weight(.bold))
                     .multilineTextAlignment(.center)
+                    .foregroundStyle(config.titleColor)
 
                 description?
                     .font(.footnote)
@@ -39,7 +40,6 @@ public struct CustomEmptyView: View {
                     .multilineTextAlignment(.center)
             }
         }
-        .foregroundColor(.secondary)
         .padding()
     }
 }
@@ -47,9 +47,14 @@ public struct CustomEmptyView: View {
 public extension CustomEmptyView {
     struct Config {
         var symbolRenderingMode: SymbolRenderingMode?
+        var titleColor: Color = .secondary
     }
 
-    func symbolRenderingMode(_ mode: SymbolRenderingMode?) -> CustomEmptyView {
+    func symbolRenderingMode(_ mode: SymbolRenderingMode?) -> Self {
         transform { $0.config.symbolRenderingMode = mode }
+    }
+
+    func titleColor(_ color: Color) -> Self {
+        transform { $0.config.titleColor = color }
     }
 }
