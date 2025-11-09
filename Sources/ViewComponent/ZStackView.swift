@@ -126,26 +126,26 @@ public extension ZStackView {
     }
 }
 
-#Preview {
-    @Previewable @State var currentIndex = 0
-
-    ZStackView(
-        numberOfViews: 10,
-        topItemIndex: $currentIndex
-    ) { index in
-        VStack {
-            Text("\(index)")
-
-            Button("Next") {
-                currentIndex = index + 1
-            }
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: currentIndex == 0 ? 200 : 350)
-        .background(.background.secondary)
-        .shadow(radius: 3)
-    }
-    .itemSpacing(30)
-    .padding(.horizontal)
-}
+// #Preview {
+//    @Previewable @State var currentIndex = 0
+//
+//    ZStackView(
+//        numberOfViews: 10,
+//        topItemIndex: $currentIndex
+//    ) { index in
+//        VStack {
+//            Text("\(index)")
+//
+//            Button("Next") {
+//                currentIndex = index + 1
+//            }
+//        }
+//        .padding()
+//        .frame(maxWidth: .infinity)
+//        .frame(minHeight: currentIndex == 0 ? 200 : 350)
+//        .background(.background.secondary)
+//        .shadow(radius: 3)
+//    }
+//    .itemSpacing(30)
+//    .padding(.horizontal)
+// }
