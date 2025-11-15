@@ -126,26 +126,57 @@ public extension ZStackView {
     }
 }
 
-// #Preview {
-//    @Previewable @State var currentIndex = 0
-//
-//    ZStackView(
-//        numberOfViews: 10,
-//        topItemIndex: $currentIndex
-//    ) { index in
-//        VStack {
-//            Text("\(index)")
-//
-//            Button("Next") {
-//                currentIndex = index + 1
-//            }
-//        }
-//        .padding()
-//        .frame(maxWidth: .infinity)
-//        .frame(minHeight: currentIndex == 0 ? 200 : 350)
-//        .background(.background.secondary)
-//        .shadow(radius: 3)
-//    }
-//    .itemSpacing(30)
-//    .padding(.horizontal)
-// }
+#if DEBUG
+    private struct PreviewContentView: View {
+        @State var currentIndex = 0
+        @State var heightMap: [Int: CGFloat] = [:]
+
+        var body: some View {
+            if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
+                ZStackView(
+                    numberOfViews: 10,
+                    topItemIndex: $currentIndex
+                ) { index in
+                    VStack {
+                        Text("\(index)")
+
+                        Button("Next") {
+                            currentIndex = index + 1
+                        }
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: {
+                        switch index {
+                        case 0:
+                            300
+                        case 1:
+                            100
+                        case 2:
+                            200
+                        default:
+                            400
+                        }
+                    }())
+                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { newValue in
+                        heightMap[index] = newValue
+                    })
+                    .frame(height: heightMap[currentIndex, default: 0])
+                    .background(.background.secondary)
+                    .shadow(radius: 3)
+                }
+                .itemSpacing(30)
+                .padding(.horizontal)
+                .onChange(of: currentIndex, initial: true) { _, newValue in
+                    print("Top item index: \(newValue), height: \(heightMap[newValue] ?? 0)")
+                }
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+    }
+
+    #Preview {
+        PreviewContentView()
+    }
+#endif
