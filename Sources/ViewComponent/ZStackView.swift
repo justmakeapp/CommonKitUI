@@ -31,15 +31,18 @@ public struct ZStackView<Item: View>: View {
                 let index = numberOfViews - 1 - forEachIndex
                 if index >= topItemIndex, index < topItemIndex + config.maxVisibleItemCount {
                     itemView(at: index)
-                        .modifier(ItemViewModifier()
-                            .ordinalNumber(UInt8(index - topItemIndex))
-                            .itemSpacing(config.itemSpacing))
+                        .modifier(
+                            ItemViewModifier()
+                                .ordinalNumber(UInt8(index - topItemIndex))
+                                .itemSpacing(config.itemSpacing)
+                                .cardOffset(config.cardOffset)
+                                .seed(config.seed)
+                        )
                 }
             }
         }
     }
 
-    @ViewBuilder
     private func itemView(at index: Int) -> some View {
         itemBuilder(index)
             .zIndex(index == topItemIndex ? 1 : 0)
@@ -55,8 +58,9 @@ private struct ItemViewModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { newValue in
-                height = newValue
+        // Note: Can not use onGeometryChange because it block fly effect of flashcard when swipe
+            .readSize(onChange: { size in
+                height = size.height
             })
             .scaleEffect(scaledFactor)
             .offset(offset)
@@ -65,7 +69,9 @@ private struct ItemViewModifier: ViewModifier {
     }
 
     private var seed: CGFloat {
-        if height == 0 {
+        if let seed = config.seed {
+            seed
+        } else if height == 0 {
             0.12
         } else {
             (height + config.itemSpacing) / height - 1
@@ -81,17 +87,26 @@ private struct ItemViewModifier: ViewModifier {
     }
 
     private var offset: CGSize {
-        let width: CGFloat = 0
-        let lossHeight = height * (1 - scaledFactor)
-        let height: CGFloat = -lossHeight
-        return .init(width: width, height: height)
+        config.cardOffset(
+            CardOffsetInfo.init(
+                height: height,
+                ordinalNumber: config.ordinalNumber,
+                itemSpacing: config.itemSpacing
+            )
+        )
     }
 
     // MARK: - ItemViewModifier API
 
     private struct Configuration {
+        var seed: CGFloat?
         var ordinalNumber: UInt8 = 0
         var itemSpacing: CGFloat = 30
+        var cardOffset: (CardOffsetInfo) -> CGSize = { _ in .zero }
+    }
+    
+    func seed(_ value: CGFloat) -> Self {
+        transform { $0.config.seed = value }
     }
 
     func ordinalNumber(_ value: UInt8) -> Self {
@@ -101,6 +116,10 @@ private struct ItemViewModifier: ViewModifier {
     func itemSpacing(_ value: CGFloat) -> Self {
         transform { $0.config.itemSpacing = value }
     }
+    
+    func cardOffset(_ value: @escaping (CardOffsetInfo) -> CGSize) -> Self {
+        transform { $0.config.cardOffset = value }
+    }
 }
 
 private extension CGSize {
@@ -109,12 +128,29 @@ private extension CGSize {
     }
 }
 
+public struct CardOffsetInfo {
+    let height: CGFloat
+    let ordinalNumber: UInt8
+    let itemSpacing: CGFloat
+}
+
 // MARK: - API
 
 public extension ZStackView {
+    
     struct Config {
+        var seed: CGFloat = 0.13
         var maxVisibleItemCount = 3
         var itemSpacing: CGFloat = 30
+        var cardOffset: (CardOffsetInfo) -> CGSize = { input in
+            let width: CGFloat = 0
+            let height: CGFloat = -CGFloat(input.ordinalNumber) * input.itemSpacing
+            return .init(width: width, height: height)
+        }
+    }
+    
+    func seed(_ value: CGFloat) -> Self {
+        transform { $0.config.seed = value }
     }
 
     func maxVisibleItemCount(_ value: Int) -> Self {
@@ -123,6 +159,10 @@ public extension ZStackView {
 
     func itemSpacing(_ value: CGFloat) -> Self {
         transform { $0.config.itemSpacing = value }
+    }
+    
+    func cardOffset(_ value: @escaping (CardOffsetInfo) -> CGSize) -> Self {
+        transform { $0.config.cardOffset = value }
     }
 }
 
