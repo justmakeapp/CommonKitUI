@@ -58,7 +58,7 @@ private struct ItemViewModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-        // Note: Can not use onGeometryChange because it block fly effect of flashcard when swipe
+            // Note: Can not use onGeometryChange because it block fly effect of flashcard when swipe
             .readSize(onChange: { size in
                 height = size.height
             })
@@ -88,7 +88,7 @@ private struct ItemViewModifier: ViewModifier {
 
     private var offset: CGSize {
         config.cardOffset(
-            CardOffsetInfo.init(
+            CardOffsetInfo(
                 height: height,
                 ordinalNumber: config.ordinalNumber,
                 itemSpacing: config.itemSpacing
@@ -104,7 +104,7 @@ private struct ItemViewModifier: ViewModifier {
         var itemSpacing: CGFloat = 30
         var cardOffset: (CardOffsetInfo) -> CGSize = { _ in .zero }
     }
-    
+
     func seed(_ value: CGFloat) -> Self {
         transform { $0.config.seed = value }
     }
@@ -116,7 +116,7 @@ private struct ItemViewModifier: ViewModifier {
     func itemSpacing(_ value: CGFloat) -> Self {
         transform { $0.config.itemSpacing = value }
     }
-    
+
     func cardOffset(_ value: @escaping (CardOffsetInfo) -> CGSize) -> Self {
         transform { $0.config.cardOffset = value }
     }
@@ -137,7 +137,6 @@ public struct CardOffsetInfo {
 // MARK: - API
 
 public extension ZStackView {
-    
     struct Config {
         var seed: CGFloat = 0.13
         var maxVisibleItemCount = 3
@@ -148,7 +147,7 @@ public extension ZStackView {
             return .init(width: width, height: height)
         }
     }
-    
+
     func seed(_ value: CGFloat) -> Self {
         transform { $0.config.seed = value }
     }
@@ -160,7 +159,7 @@ public extension ZStackView {
     func itemSpacing(_ value: CGFloat) -> Self {
         transform { $0.config.itemSpacing = value }
     }
-    
+
     func cardOffset(_ value: @escaping (CardOffsetInfo) -> CGSize) -> Self {
         transform { $0.config.cardOffset = value }
     }
