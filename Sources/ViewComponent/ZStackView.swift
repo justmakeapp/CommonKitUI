@@ -105,7 +105,7 @@ private struct ItemViewModifier: ViewModifier {
         var cardOffset: (CardOffsetInfo) -> CGSize = { _ in .zero }
     }
 
-    func seed(_ value: CGFloat) -> Self {
+    func seed(_ value: CGFloat?) -> Self {
         transform { $0.config.seed = value }
     }
 
@@ -129,16 +129,16 @@ private extension CGSize {
 }
 
 public struct CardOffsetInfo {
-    let height: CGFloat
-    let ordinalNumber: UInt8
-    let itemSpacing: CGFloat
+    public let height: CGFloat
+    public let ordinalNumber: UInt8
+    public let itemSpacing: CGFloat
 }
 
 // MARK: - API
 
 public extension ZStackView {
     struct Config {
-        var seed: CGFloat = 0.13
+        var seed: CGFloat? = 0.13
         var maxVisibleItemCount = 3
         var itemSpacing: CGFloat = 30
         var cardOffset: (CardOffsetInfo) -> CGSize = { input in
@@ -148,7 +148,7 @@ public extension ZStackView {
         }
     }
 
-    func seed(_ value: CGFloat) -> Self {
+    func seed(_ value: CGFloat?) -> Self {
         transform { $0.config.seed = value }
     }
 
