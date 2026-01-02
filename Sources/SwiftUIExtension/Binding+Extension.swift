@@ -54,6 +54,16 @@ public extension Binding where Value: Sendable {
     }
 }
 
+public extension Binding where Value == Bool {
+    /// An inverted binding for a boolean value.
+    var inverted: Binding<Value> {
+        Binding<Value>(
+            get: { !wrappedValue }, // The getter returns the opposite of the current value
+            set: { wrappedValue = !$0 } // The setter toggles the original value
+        )
+    }
+}
+
 public extension Binding where Value: Equatable & Sendable {
     /// Given a binding to an optional value, creates a non-optional binding that projects
     /// the unwrapped value. If the given optional binding contains `nil`, then the supplied
