@@ -53,7 +53,7 @@ public extension PageIndicator {
 private struct DotIndicator: View {
     let minScale: CGFloat = 1
     let maxScale: CGFloat = 1.1
-    let minOpacity: Double = 0.6
+    let minOpacity: Double = 0.3
 
     let pageIndex: Int
     @Binding var slectedPage: Int
@@ -73,7 +73,7 @@ private struct DotIndicator: View {
             .if(isSelected) {
                 $0.foregroundStyle(.tint)
             } else: {
-                $0.foregroundStyle(Color.gray.opacity(minOpacity))
+                $0.foregroundStyle(.tint.opacity(minOpacity))
             }
             .onTapGesture {
                 self.slectedPage = self.pageIndex
