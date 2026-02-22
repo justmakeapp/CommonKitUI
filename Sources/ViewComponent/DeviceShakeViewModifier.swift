@@ -22,7 +22,7 @@
         }
     }
 
-    // A view modifier that detects shaking and calls a function of our choosing.
+    /// A view modifier that detects shaking and calls a function of our choosing.
     public struct DeviceShakeViewModifier: ViewModifier {
         public let action: () -> Void
 

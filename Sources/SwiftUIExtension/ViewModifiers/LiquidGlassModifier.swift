@@ -105,7 +105,6 @@ public struct GlassEffectModifier: ViewModifier {
         self.tint = tint
     }
 
-    @ViewBuilder
     public func body(content: Content) -> some View {
         if #available(iOS 26.0, macOS 26.0, watchOS 26.0, *) {
             // Choose effect type and apply modifications

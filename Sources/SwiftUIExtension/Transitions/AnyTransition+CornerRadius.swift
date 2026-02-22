@@ -8,15 +8,8 @@
 import Foundation
 import SwiftUI
 
-public struct CornerRadiusKey: EnvironmentKey {
-    public static let defaultValue: Double = 0
-}
-
 extension EnvironmentValues {
-    var cornerRadius: Double {
-        get { return self[CornerRadiusKey.self] }
-        set { self[CornerRadiusKey.self] = newValue }
-    }
+    @Entry var cornerRadius: Double = 0
 }
 
 public struct AnimatableRoundedRectangle: View {

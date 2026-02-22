@@ -34,7 +34,9 @@ public struct ScrollViewOffsetReader: ViewModifier {
     }
 
     struct PreferenceKey: SwiftUI.PreferenceKey {
-        static var defaultValue: CGPoint { .zero }
+        static var defaultValue: CGPoint {
+            .zero
+        }
 
         static func reduce(value _: inout CGPoint, nextValue _: () -> CGPoint) {
             // No-op

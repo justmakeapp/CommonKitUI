@@ -9,7 +9,7 @@
     import UIKit
 
     public extension UIImage {
-        // https://stackoverflow.com/questions/53949421/selecting-images-with-uiimagepickercontroller-auto-rotates-them
+        /// https://stackoverflow.com/questions/53949421/selecting-images-with-uiimagepickercontroller-auto-rotates-them
         func fixedOrientation() -> UIImage {
             if imageOrientation == .up {
                 return self

@@ -81,9 +81,7 @@ private struct ItemViewModifier: ViewModifier {
     private var scaledFactor: CGFloat {
         let ordinalNumber = CGFloat(config.ordinalNumber)
 
-        let factor: CGFloat = 1 - ordinalNumber * seed
-
-        return factor
+        return 1 - ordinalNumber * seed
     }
 
     private var offset: CGSize {

@@ -167,7 +167,7 @@ public extension TypeWriterWithIndicatorView {
 }
 
 public extension TypeWriterWithIndicatorView.ColorCombination {
-    // https://designwizard.com/blog/colour-combination/
+    /// https://designwizard.com/blog/colour-combination/
     static let `default` = [
         Self(
             textColor: Color(hexRGBA: "#00539CFF")!, // Princess Blue

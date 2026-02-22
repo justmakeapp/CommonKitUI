@@ -109,12 +109,7 @@ public struct ExpandableText: View {
 
 private struct OverlayAdapter<V: View>: ViewModifier {
     let alignment: Alignment
-    let view: () -> V
-
-    init(alignment: Alignment, @ViewBuilder view: @escaping () -> V) {
-        self.alignment = alignment
-        self.view = view
-    }
+    @ViewBuilder let view: () -> V
 
     func body(content: Content) -> some View {
         if #available(iOS 15.0, *) {

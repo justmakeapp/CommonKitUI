@@ -29,14 +29,25 @@
             return UIFont(descriptor: descriptor, size: pointSize)
         }
 
-        var semibold: UIFont { withWeight(.semibold) }
-        var regular: UIFont { withTraits(traits: .init()).withWeight(.regular) }
+        var semibold: UIFont {
+            withWeight(.semibold)
+        }
 
-        var bold: UIFont { withTraits(traits: .traitBold) }
+        var regular: UIFont {
+            withTraits(traits: .init()).withWeight(.regular)
+        }
 
-        var italic: UIFont { withTraits(traits: .traitItalic) }
+        var bold: UIFont {
+            withTraits(traits: .traitBold)
+        }
 
-        var boldItalic: UIFont { withTraits(traits: .traitBold, .traitItalic) }
+        var italic: UIFont {
+            withTraits(traits: .traitItalic)
+        }
+
+        var boldItalic: UIFont {
+            withTraits(traits: .traitBold, .traitItalic)
+        }
 
         var isBold: Bool {
             return fontDescriptor.symbolicTraits.contains(.traitBold)

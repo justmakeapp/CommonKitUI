@@ -48,5 +48,7 @@ public struct PressEffectButtonStyle: ButtonStyle {
 }
 
 public extension ButtonStyle where Self == PressEffectButtonStyle {
-    static var pressEffect: PressEffectButtonStyle { .init() }
+    static var pressEffect: PressEffectButtonStyle {
+        .init()
+    }
 }

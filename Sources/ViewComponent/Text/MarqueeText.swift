@@ -115,7 +115,6 @@ public struct MarqueeText: View {
 
     // MARK: - Marquee pair of texts
 
-    @ViewBuilder
     private func makeMarqueeTexts(
         stringWidth: CGFloat,
         stringHeight: CGFloat,
@@ -143,7 +142,6 @@ public struct MarqueeText: View {
 
     // MARK: - Fade mask
 
-    @ViewBuilder
     private func fadeMask(leftFade: CGFloat, rightFade: CGFloat) -> some View {
         HStack(spacing: 0) {
             Rectangle().frame(width: 2).opacity(0)
