@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 public protocol ApplicationService: AnyObject {
     func becomeActive()
     func resignActive()
