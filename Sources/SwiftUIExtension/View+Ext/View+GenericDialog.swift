@@ -24,8 +24,10 @@ public struct GenericDialog<DialogContent: View>: ViewModifier {
         ZStack {
             content
             if isShowing {
+                // Only the dimming layer reaches the edges; content keeps its safe area.
                 Rectangle()
                     .foregroundColor(Color.black.opacity(0.3))
+                    .ignoresSafeArea()
                     .onTapGesture {
                         if cancelOnTapOutside {
                             cancelAction?()
@@ -40,7 +42,6 @@ public struct GenericDialog<DialogContent: View>: ViewModifier {
                 }.padding(40)
             }
         }
-        .ignoresSafeArea()
         .animation(.linear, value: isShowing)
     }
 
