@@ -29,7 +29,7 @@ import SwiftUI
                         isLoading: $isLoading,
                         error: $error
                     )
-                    .edgesIgnoringSafeArea(.all)
+
                     if isLoading {
                         SwiftUI.ProgressView()
                     }
@@ -37,6 +37,8 @@ import SwiftUI
                     Text("Sorry, we could not load this url.")
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.background)
             .onAppear {
 //            WKWebsiteDataStore.default().removeData(
 //                ofTypes: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache],
@@ -86,6 +88,14 @@ import SwiftUI
                 parent.error = error
             }
         }
+    }
+
+    #Preview {
+        WebView(url: URL(string: "https://www.apple.com"))
+    }
+
+    #Preview("No URL") {
+        WebView(url: nil)
     }
 #endif
 
