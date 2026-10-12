@@ -12,8 +12,10 @@ public enum ActiveDivision {
     /// The part of `bounds` on the larger side of `division`.
     ///
     /// A division taller than it is wide splits `bounds` into leading and trailing sides; otherwise into top and
-    /// bottom. Ties go to the leading (or top) side. Returns `bounds` when the division doesn't overlap it.
-    public static func largerSide(of bounds: CGRect, division: CGRect) -> CGRect {
+    /// bottom. Ties go to the leading (or top) side. Returns `bounds` when there is no active division (`nil`) or it
+    /// doesn't overlap `bounds`.
+    public static func largerSide(of bounds: CGRect, division: CGRect?) -> CGRect {
+        guard let division else { return bounds }
         let overlap = bounds.intersection(division)
         guard !overlap.isNull, !overlap.isEmpty else { return bounds }
 
@@ -49,15 +51,17 @@ public struct ActiveDivisionAvoidanceModifier: ViewModifier {
     }
 
     private func sideRect(in proxy: GeometryProxy) -> CGRect {
-        let bounds = CGRect(origin: .zero, size: proxy.size)
+        ActiveDivision.largerSide(of: CGRect(origin: .zero, size: proxy.size), division: activeDivision(in: proxy))
+    }
+
+    private func activeDivision(in proxy: GeometryProxy) -> CGRect? {
         #if os(iOS) && canImport(SwiftUI, _version: 8.0.85)
             // The iOS 27.1 SDK (SwiftUI 8.0.85) is the first with reserved regions.
-            if #available(iOS 27.1, *),
-               let division = proxy.reservedRegions(kind: .division).first(where: \.isActive) {
-                return ActiveDivision.largerSide(of: bounds, division: division.frame)
+            if #available(iOS 27.1, *) {
+                return proxy.reservedRegions(kind: .division).first(where: \.isActive)?.frame
             }
         #endif
-        return bounds
+        return nil
     }
 }
 
