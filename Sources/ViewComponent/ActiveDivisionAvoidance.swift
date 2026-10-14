@@ -88,13 +88,22 @@ public struct ActiveDivisionAvoidanceModifier: ViewModifier {
 /// cell. The content must fill the proposed width (`.frame(maxWidth: .infinity)`), so the padding narrows what is
 /// inside it rather than the measured frame. Only the padding changes, so the content keeps its identity and state
 /// across a fold.
+///
+/// While inset, the content sees a compact horizontal size class: one side of the fold is a phone-width pane, like
+/// the sheets the system docks there, so regular-width layouts (four tiles in a row, two-column grids) don't squeeze.
 public struct ActiveDivisionInsetModifier: ViewModifier {
     @State private var insets = EdgeInsets()
+    #if os(iOS)
+        @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
 
     public init() {}
 
     public func body(content: Content) -> some View {
         content
+        #if os(iOS)
+            .environment(\.horizontalSizeClass, insets == EdgeInsets() ? horizontalSizeClass : .compact)
+        #endif
             .padding(insets)
             // Measures the padded view, whose width the padding doesn't change, so the insets can't feed back.
             .onGeometryChange(for: EdgeInsets.self) { proxy in
