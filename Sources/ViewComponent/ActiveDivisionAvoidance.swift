@@ -47,7 +47,7 @@ public enum ActiveDivision {
     }
 
     /// The first active division in `proxy`'s coordinates, or `nil` before iOS 27.1 or without one.
-    static func activeFrame(in proxy: GeometryProxy) -> CGRect? {
+    public static func activeFrame(in proxy: GeometryProxy) -> CGRect? {
         #if os(iOS) && canImport(SwiftUI, _version: 8.0.85)
             // The iOS 27.1 SDK (SwiftUI 8.0.85) is the first with reserved regions.
             if #available(iOS 27.1, *) {
