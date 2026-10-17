@@ -18,6 +18,9 @@ public struct TruncableText<ButtonLabel: View>: View {
     /// Label for the expand button.
     private let buttonLabel: () -> ButtonLabel
 
+    /// Whether the expand button appears when the text is truncated. When `false`, the text truncates with an ellipsis.
+    private let showsExpandButton: Bool
+
     /// Width of the gradient placed on the leading edge of the expand button.
     private let gradientWidth: Double = 60
 
@@ -25,16 +28,22 @@ public struct TruncableText<ButtonLabel: View>: View {
         truncatedSize != intrinsicSize
     }
 
+    private var isExpandButtonVisible: Bool {
+        showsExpandButton && isTruncated
+    }
+
     public init(
         _ text: Text,
         intrinsicSize: CGSize = .zero,
         truncatedSize: CGSize = .zero,
+        showsExpandButton: Bool = true,
         @ViewBuilder buttonLabel: @escaping () -> ButtonLabel
     ) {
         self.text = text
         self.intrinsicSize = intrinsicSize
         self.truncatedSize = truncatedSize
         self.buttonLabel = buttonLabel
+        self.showsExpandButton = showsExpandButton
     }
 
     public var body: some View {
@@ -49,7 +58,7 @@ public struct TruncableText<ButtonLabel: View>: View {
                     truncatedSize = size
                 }
                 .invertedMask {
-                    if isTruncated {
+                    if isExpandButtonVisible {
                         expandButtonCutout
                     }
                 }
@@ -62,7 +71,7 @@ public struct TruncableText<ButtonLabel: View>: View {
                         }
                 )
 
-            if isTruncated {
+            if isExpandButtonVisible {
                 buttonLabel()
             }
         }
