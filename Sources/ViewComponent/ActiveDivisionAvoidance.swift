@@ -14,6 +14,19 @@ public enum ActiveDivision {
     /// A division taller than it is wide splits `bounds` into leading and trailing sides; otherwise into top and
     /// bottom. Ties go to the leading (or top) side. Returns `bounds` when there is no active division (`nil`) or it
     /// doesn't overlap `bounds`.
+    ///
+    /// ```
+    /// Vertical division         Horizontal division
+    /// +----------+--+-------+   +---------------------+
+    /// |          |//|       |   |         top         |
+    /// |          |//|       |   |/////////////////////|
+    /// |  result  |//|       |   |                     |
+    /// |          |//|       |   |       result        |
+    /// |          |//|       |   |                     |
+    /// +----------+--+-------+   +---------------------+
+    /// ```
+    ///
+    /// `/` marks the division; `result` is the returned rect.
     public static func largerSide(of bounds: CGRect, division: CGRect?) -> CGRect {
         guard let division else { return bounds }
         let overlap = bounds.intersection(division)
