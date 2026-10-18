@@ -37,6 +37,7 @@ public struct ZStackView<Item: View>: View {
                                 .itemSpacing(config.itemSpacing)
                                 .cardOffset(config.cardOffset)
                                 .seed(config.seed)
+                                .scaleAnchor(config.scaleAnchor)
                         )
                 }
             }
@@ -62,7 +63,7 @@ private struct ItemViewModifier: ViewModifier {
             .readSize(onChange: { size in
                 height = size.height
             })
-            .scaleEffect(scaledFactor)
+            .scaleEffect(scaledFactor, anchor: config.scaleAnchor)
             .offset(offset)
             .animation(.linear, value: scaledFactor)
             .animation(.linear, value: offset)
@@ -101,10 +102,15 @@ private struct ItemViewModifier: ViewModifier {
         var ordinalNumber: UInt8 = 0
         var itemSpacing: CGFloat = 30
         var cardOffset: (CardOffsetInfo) -> CGSize = { _ in .zero }
+        var scaleAnchor: UnitPoint = .center
     }
 
     func seed(_ value: CGFloat?) -> Self {
         transform { $0.config.seed = value }
+    }
+
+    func scaleAnchor(_ value: UnitPoint) -> Self {
+        transform { $0.config.scaleAnchor = value }
     }
 
     func ordinalNumber(_ value: UInt8) -> Self {
@@ -144,6 +150,8 @@ public extension ZStackView {
             let height: CGFloat = -CGFloat(input.ordinalNumber) * input.itemSpacing
             return .init(width: width, height: height)
         }
+        /// The point in each item that cards behind the top one scale towards.
+        var scaleAnchor: UnitPoint = .center
     }
 
     func seed(_ value: CGFloat?) -> Self {
@@ -160,6 +168,10 @@ public extension ZStackView {
 
     func cardOffset(_ value: @escaping (CardOffsetInfo) -> CGSize) -> Self {
         transform { $0.config.cardOffset = value }
+    }
+
+    func scaleAnchor(_ value: UnitPoint) -> Self {
+        transform { $0.config.scaleAnchor = value }
     }
 }
 

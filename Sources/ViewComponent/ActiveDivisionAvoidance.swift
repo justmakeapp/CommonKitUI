@@ -52,7 +52,12 @@ public enum ActiveDivision {
 ///
 /// Only the frame and position change, so the content keeps its identity and state across a fold.
 public struct ActiveDivisionAvoidanceModifier: ViewModifier {
-    public init() {}
+    private let isEnabled: Bool
+
+    /// - Parameter isEnabled: false fills the whole area even with a division; the content keeps its identity.
+    public init(isEnabled: Bool = true) {
+        self.isEnabled = isEnabled
+    }
 
     public func body(content: Content) -> some View {
         GeometryReader { proxy in
@@ -68,6 +73,7 @@ public struct ActiveDivisionAvoidanceModifier: ViewModifier {
     }
 
     private func activeDivision(in proxy: GeometryProxy) -> CGRect? {
+        guard isEnabled else { return nil }
         #if os(iOS) && canImport(SwiftUI, _version: 8.0.85)
             // The iOS 27.1 SDK (SwiftUI 8.0.85) is the first with reserved regions.
             if #available(iOS 27.1, *) {
@@ -81,7 +87,7 @@ public struct ActiveDivisionAvoidanceModifier: ViewModifier {
 public extension View {
     /// Keeps the view wholly on the larger side of an active display division, such as a partly folded
     /// iPhone Duo. Without one, the view fills the available area.
-    func avoidingActiveDivision() -> some View {
-        modifier(ActiveDivisionAvoidanceModifier())
+    func avoidingActiveDivision(isEnabled: Bool = true) -> some View {
+        modifier(ActiveDivisionAvoidanceModifier(isEnabled: isEnabled))
     }
 }
