@@ -46,6 +46,17 @@ public enum ActiveDivision {
                 : CGRect(x: bounds.minX, y: overlap.maxY, width: bounds.width, height: bottomHeight)
         }
     }
+
+    /// The first active division in `proxy`'s coordinates, or `nil` before iOS 27.1 or without one.
+    public static func activeFrame(in proxy: GeometryProxy) -> CGRect? {
+        #if os(iOS) && canImport(SwiftUI, _version: 8.0.85)
+            // The iOS 27.1 SDK (SwiftUI 8.0.85) is the first with reserved regions.
+            if #available(iOS 27.1, *) {
+                return proxy.reservedRegions(kind: .division).first(where: \.isActive)?.frame
+            }
+        #endif
+        return nil
+    }
 }
 
 /// Fills the available area, or only its larger side while a display division is active (iOS 27.1+).
@@ -74,13 +85,7 @@ public struct ActiveDivisionAvoidanceModifier: ViewModifier {
 
     private func activeDivision(in proxy: GeometryProxy) -> CGRect? {
         guard isEnabled else { return nil }
-        #if os(iOS) && canImport(SwiftUI, _version: 8.0.85)
-            // The iOS 27.1 SDK (SwiftUI 8.0.85) is the first with reserved regions.
-            if #available(iOS 27.1, *) {
-                return proxy.reservedRegions(kind: .division).first(where: \.isActive)?.frame
-            }
-        #endif
-        return nil
+        return ActiveDivision.activeFrame(in: proxy)
     }
 }
 
