@@ -46,7 +46,9 @@ public struct ZStackView<Item: View>: View {
 
     private func itemView(at index: Int) -> some View {
         itemBuilder(index)
-            .zIndex(index == topItemIndex ? 1 : 0)
+            // A lower index always draws above a higher one, so a card the stack has just removed stays above the new
+            // top card while it leaves.
+            .zIndex(Double(numberOfViews - index))
             .disabled(index != topItemIndex)
     }
 }
