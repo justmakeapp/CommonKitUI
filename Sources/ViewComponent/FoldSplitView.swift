@@ -8,8 +8,8 @@
 import SwiftUI
 
 /// Two panes on either side of a partly folded iPhone Duo's hinge, which `ArrangementView` keeps them clear of, with
-/// the primary pane's background running up to the hinge. Before iOS 27.1, which reports no folds, and off iOS, the
-/// panes sit side by side.
+/// the primary pane's background running up to the hinge. Without a fold, `ArrangementView` splits by the space it
+/// has (stacked in portrait). Before iOS 27.1, which reports no folds, and off iOS, the panes sit side by side.
 public struct FoldSplitView<Primary: View, Secondary: View>: View {
     private let sideBySide: Bool
     private let primaryBackground: Color
@@ -59,5 +59,27 @@ public struct FoldSplitView<Primary: View, Secondary: View>: View {
 
             secondary
         }
+    }
+}
+
+#Preview("Fold top to bottom") {
+    FoldSplitView(sideBySide: true, primaryBackground: .yellow.opacity(0.3)) {
+        Text("Primary")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.yellow.opacity(0.3))
+    } secondary: {
+        Text("Secondary")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+#Preview("Fold side to side") {
+    FoldSplitView(sideBySide: false, primaryBackground: .yellow.opacity(0.3)) {
+        Text("Primary")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.yellow.opacity(0.3))
+    } secondary: {
+        Text("Secondary")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

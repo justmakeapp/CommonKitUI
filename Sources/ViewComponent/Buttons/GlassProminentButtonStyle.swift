@@ -27,3 +27,23 @@ public extension View {
         #endif
     }
 }
+
+#Preview {
+    VStack(spacing: 20) {
+        Button("Start Quiz") {}
+            .glassProminentButtonStyle()
+            .controlSize(.large)
+
+        Button("Create Quiz", systemImage: "plus.square") {}
+            .glassProminentButtonStyle()
+
+        Button("Turn on notifications", systemImage: "bell") {}
+            .glassProminentButtonStyle()
+            .tint(.orange)
+
+        Button("Start Quiz") {}
+            .glassProminentButtonStyle()
+            .disabled(true)
+    }
+    .padding()
+}
