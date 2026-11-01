@@ -125,39 +125,3 @@ ZStackView(numberOfViews: 5, topItemIndex: $topIndex) { index in
 .itemSpacing(20)
 .seed(0.08)
 ```
-
----
-
-## FoldSplitView
-
-**File:** `FoldSplitView.swift`
-**Platform:** All (folds on iOS 27.1+; side by side elsewhere)
-
-Two panes on either side of a partly folded iPhone Duo's hinge, arranged by `ArrangementView` so neither runs under it. The primary pane's background runs up to the hinge (`FoldSideBackground`). Without a fold, `ArrangementView` splits by the space it has (stacked in portrait). Before iOS 27.1, and off iOS, the panes sit side by side. `sideBySide` only says which way the fold runs, for the background.
-
-**Sample:**
-
-```swift
-// sideBySide: the fold runs top to bottom
-FoldSplitView(sideBySide: fold.height > fold.width, primaryBackground: .secondarySystemBackground) {
-    questionPane
-} secondary: {
-    answersPane
-}
-```
-
----
-
-## FoldSideBackground
-
-**File:** `FoldSideBackground.swift`
-**Platform:** All (draws only with an active fold)
-
-Paints the leading (or top) side of a partly folded iPhone Duo up to the hinge. Use it as a background behind panes whose own backgrounds stop beside the hinge.
-
-```swift
-content
-    .background {
-        FoldSideBackground(.secondarySystemBackground, sideBySide: true)
-    }
-```
