@@ -27,10 +27,10 @@ ViewComponent → SwiftUIExtension → UIKitExtension → CoreGraphicsExt
 
 ## ViewComponent Reference
 
-- [Buttons](.agents/docs/buttons.md) — CloseButton, DebounceButton, PlusCircularButtonLabel
+- [Buttons](.agents/docs/buttons.md) — CloseButton, DebounceButton, PlusCircularButtonLabel, glassProminentButtonStyle()
 - [Text & Typography](.agents/docs/text-typography.md) — ExpandableText, MarqueeText, TruncableText, TypewriterView, CustomNavigationTitleView
 - [Text Input](.agents/docs/text-input.md) — EditorView, EmojiTextField, DefaultTextFieldStyle
-- [Layout & Containers](.agents/docs/layout-containers.md) — WrappingHStack, MasonryVStack, ZStackView
+- [Layout & Containers](.agents/docs/layout-containers.md) — WrappingHStack, MasonryVStack, ZStackView, FoldSplitView, FoldSideBackground
 - [Progress & Status](.agents/docs/progress-status.md) — CustomProgressView, CheckmarkView, PageIndicator
 - [Lists & Pagination](.agents/docs/lists-pagination.md) — LoadMore protocol, LoadMoreViewModifier, SectionHeader
 - [Document & Web](.agents/docs/document-web.md) — DocumentPicker, ImagePicker, PdfKitView, WebView, ShareSheetView

@@ -90,3 +90,20 @@ Button {
     PlusCircularButtonLabel()
 }
 ```
+
+---
+
+## glassProminentButtonStyle()
+
+**File:** `Buttons/GlassProminentButtonStyle.swift`
+**Platform:** All (bordered prominent on visionOS and before iOS 26 / macOS 26)
+
+A primary button's style: `.glassProminent` from iOS 26 and macOS 26, `.borderedProminent` before it, in a capsule either way.
+
+**Sample:**
+
+```swift
+Button("Start Quiz", action: startQuiz)
+    .glassProminentButtonStyle()
+    .controlSize(.large)
+```
