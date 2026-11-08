@@ -10,6 +10,9 @@ import SwiftUI
 public struct RoundedPrimaryButtonStyle: ViewModifier {
     public var cornerRadius: CGFloat
 
+    /// A disabled button must look disabled: the fill alone looked the same either way.
+    @Environment(\.isEnabled) private var isEnabled
+
     public init(cornerRadius: CGFloat = 8) {
         self.cornerRadius = cornerRadius
     }
@@ -21,7 +24,10 @@ public struct RoundedPrimaryButtonStyle: ViewModifier {
             .padding(.horizontal)
             .background(.tint)
             .clipShape(.rect(cornerRadius: cornerRadius))
+            .opacity(isEnabled ? 1 : Self.disabledOpacity)
     }
+
+    private static let disabledOpacity = 0.4
 }
 
 #Preview {
