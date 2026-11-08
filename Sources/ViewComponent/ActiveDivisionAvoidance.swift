@@ -57,6 +57,20 @@ public enum ActiveDivision {
         #endif
         return nil
     }
+
+    /// The first division running top to bottom in `proxy`'s coordinates, partly folded or lying flat (reported as
+    /// inactive), or `nil` before iOS 27.1, without one, or when it runs across.
+    public static func sideBySideFrame(in proxy: GeometryProxy) -> CGRect? {
+        #if os(iOS) && canImport(SwiftUI, _version: 8.0.85)
+            // The iOS 27.1 SDK (SwiftUI 8.0.85) is the first with reserved regions.
+            if #available(iOS 27.1, *) {
+                return proxy.reservedRegions(kind: .division, options: .includeInactive)
+                    .first
+                    .flatMap { $0.frame.height > $0.frame.width ? $0.frame : nil }
+            }
+        #endif
+        return nil
+    }
 }
 
 /// Fills the available area, or only its larger side while a display division is active (iOS 27.1+).
