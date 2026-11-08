@@ -61,6 +61,8 @@ let style = BorderlessButtonStyle().eraseToAnyPrimitiveButtonStyle()
 
 A `ViewModifier` that styles a button as a full-width, tint-colored pill with white text. Apply with `.modifier()`.
 
+A disabled button dims to 40 % opacity. The modifier reads `isEnabled` from its own environment, so `.disabled()` must sit outside it: on the `Button` when the modifier styles the label, or after the modifier (or on an ancestor) when it styles the button. `Button {}.disabled(true).modifier(RoundedPrimaryButtonStyle())` stays at full opacity.
+
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `cornerRadius` | `8` | Corner radius of the background |
