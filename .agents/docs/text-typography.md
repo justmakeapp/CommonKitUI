@@ -41,9 +41,9 @@ ExpandableText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do 
 ## MarqueeText
 
 **File:** `Text/MarqueeText.swift`
-**Platform:** All
+**Platform:** All. Scrolls on iOS, tvOS and visionOS; on macOS and watchOS, text that doesn't fit is truncated.
 
-Horizontally scrolling text with fade edges. Only animates when the text is wider than the container. Uses `PlatformFont` (`UIFont` on iOS, `NSFont` on macOS).
+Horizontally scrolling text with fade edges. Only animates when the text is wider than the container: it scrolls once, then rests at its start, and every instance starts its scrolls on the same 10-second clock ticks. The scroll is a Core Animation animation that the render server plays, so the app does no per-frame work. Uses `PlatformFont` (`UIFont` on iOS, `NSFont` on macOS); put the weight in the font and pass the colour as `foregroundColor`, because `.fontWeight` and `.foregroundStyle` don't reach the scrolling text.
 
 **Config:**
 
@@ -58,6 +58,7 @@ Horizontally scrolling text with fade edges. Only animates when the text is wide
 MarqueeText(
     text: "A Very Long Song Title That Doesn't Fit",
     font: .systemFont(ofSize: 16, weight: .medium),
+    foregroundColor: .secondary,
     leftFade: 16,
     rightFade: 16,
     startDelay: 1.0
