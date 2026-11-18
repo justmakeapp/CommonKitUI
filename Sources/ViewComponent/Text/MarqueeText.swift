@@ -17,13 +17,19 @@ import SwiftUI
 
 /// Text that scrolls sideways, with faded edges, when it is wider than its container.
 ///
-/// The scroll is a Core Animation animation, which the render server plays: the app does no work
-/// per frame, so a scrolling title doesn't keep the CPU busy. That's also why the text takes its
-/// colour from `foregroundColor` rather than from `.foregroundStyle`, which UIKit can't read.
+/// On iOS, tvOS and visionOS the scroll is a Core Animation animation, which the render server plays:
+/// the app does no work per frame, so a scrolling title doesn't keep the CPU busy. UIKit can't read
+/// `.foregroundStyle`, so pass the colour as `foregroundColor` there (it falls back to `.primary`).
+/// On macOS and watchOS the scroll is a SwiftUI animation that inherits `.foregroundStyle`.
+///
+/// Either way a title scrolls once, rests at its start, and starts on the same clock tick as every
+/// other marquee, so titles on screen scroll together and rest together.
 public struct MarqueeText: View {
     public var text: String
     public var font: PlatformFont
-    public var foregroundColor: Color
+    /// The text colour. When nil, the text takes the inherited `.foregroundStyle`, except when the
+    /// Core Animation path scrolls it, which draws it in `.primary`.
+    public var foregroundColor: Color?
     public var leftFade: CGFloat
     public var rightFade: CGFloat
     public var startDelay: Double
@@ -41,7 +47,7 @@ public struct MarqueeText: View {
             } else {
                 Text(text)
                     .font(.init(font))
-                    .foregroundStyle(foregroundColor)
+                    .foregroundStyle(ifSet: foregroundColor)
                     .frame(
                         minWidth: 0,
                         maxWidth: .infinity,
@@ -62,7 +68,7 @@ public struct MarqueeText: View {
             MarqueeScrollingText(
                 text: text,
                 font: font,
-                color: foregroundColor,
+                color: foregroundColor ?? .primary,
                 leftFade: leftFade,
                 rightFade: rightFade,
                 startDelay: startDelay
@@ -71,11 +77,16 @@ public struct MarqueeText: View {
             .offset(x: -leftFade)
             .accessibilityRepresentation { Text(text) }
         #else
-            Text(text)
-                .font(.init(font))
-                .foregroundStyle(foregroundColor)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            MarqueeSwiftUIScrollingText(
+                text: text,
+                font: font,
+                leftFade: leftFade,
+                rightFade: rightFade,
+                startDelay: startDelay
+            )
+            .foregroundStyle(ifSet: foregroundColor)
+            .frame(width: width + leftFade)
+            .offset(x: -leftFade)
         #endif
     }
 
@@ -84,7 +95,7 @@ public struct MarqueeText: View {
     public init(
         text: String,
         font: PlatformFont,
-        foregroundColor: Color = .primary,
+        foregroundColor: Color? = nil,
         leftFade: CGFloat,
         rightFade: CGFloat,
         startDelay: Double,
@@ -105,6 +116,33 @@ public extension MarqueeText {
         var view = self
         view.isCompact = compact
         return view
+    }
+}
+
+/// When marquees start their scrolls, shared by both implementations.
+private enum MarqueeTiming {
+    /// Every marquee starts its scrolls on the same clock ticks, this many seconds apart, so all titles on
+    /// screen scroll together and rest together, and the screen has nothing to redraw in between.
+    static let scrollCycle: TimeInterval = 10
+    /// The least time a title rests at its start before it scrolls again.
+    static let minimumPause: TimeInterval = 3
+    /// Scrolling speed, in points per second.
+    static let speed: CGFloat = 30
+
+    /// The first clock tick at or after `time`.
+    static func tick(atOrAfter time: TimeInterval) -> TimeInterval {
+        (time / scrollCycle).rounded(.up) * scrollCycle
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func foregroundStyle(ifSet color: Color?) -> some View {
+        if let color {
+            foregroundStyle(color)
+        } else {
+            self
+        }
     }
 }
 
@@ -154,13 +192,6 @@ public extension MarqueeText {
             var startDelay: Double
         }
 
-        /// Every marquee starts its scrolls on the same clock ticks, this many seconds apart, so all titles on
-        /// screen scroll together and rest together, and the screen has nothing to redraw in between.
-        private static let scrollCycle: CFTimeInterval = 10
-        /// The least time a title rests at its start before it scrolls again.
-        private static let minimumPause: CFTimeInterval = 3
-        /// Scrolling speed, in points per second.
-        private static let speed: CGFloat = 30
         private static let animationKey = "marquee"
 
         private var content: Content?
@@ -247,8 +278,8 @@ public extension MarqueeText {
             }
             animatedDistance = distance
 
-            let scrollDuration = CFTimeInterval(textWidth / Self.speed)
-            let period = ((scrollDuration + Self.minimumPause) / Self.scrollCycle).rounded(.up) * Self.scrollCycle
+            let scrollDuration = CFTimeInterval(textWidth / MarqueeTiming.speed)
+            let period = MarqueeTiming.tick(atOrAfter: scrollDuration + MarqueeTiming.minimumPause)
 
             // Scroll, then rest at the start for the rest of the period.
             let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
@@ -257,10 +288,74 @@ public extension MarqueeText {
             animation.duration = period
             animation.repeatCount = .infinity
             animation.isRemovedOnCompletion = false
-            let earliestStart = CACurrentMediaTime() + content.startDelay
-            let start = (earliestStart / Self.scrollCycle).rounded(.up) * Self.scrollCycle
+            let start = MarqueeTiming.tick(atOrAfter: CACurrentMediaTime() + content.startDelay)
             animation.beginTime = track.layer.convertTime(start, from: nil)
             track.layer.add(animation, forKey: Self.animationKey)
+        }
+    }
+
+#else
+
+    // MARK: - Scrolling text (SwiftUI)
+
+    /// Two copies of the text, moved by a SwiftUI animation that a task starts on each clock tick.
+    /// Platforms without Core Animation in UIKit use this; the app does work every frame while it moves.
+    private struct MarqueeSwiftUIScrollingText: View {
+        let text: String
+        let font: PlatformFont
+        let leftFade: CGFloat
+        let rightFade: CGFloat
+        let startDelay: Double
+
+        @State private var animate = false
+
+        var body: some View {
+            let stringWidth = text.widthOfString(usingFont: font)
+            let stringHeight = text.heightOfString(usingFont: font)
+            let scrollDuration = Double(stringWidth / MarqueeTiming.speed)
+            let distance = stringWidth + stringHeight * 2
+
+            ZStack(alignment: .topLeading) {
+                ForEach(0 ..< 2, id: \.self) { copy in
+                    Text(text)
+                        .lineLimit(1)
+                        .font(.init(font))
+                        .fixedSize(horizontal: true, vertical: false)
+                        .offset(x: distance * CGFloat(copy) - (animate ? distance : 0))
+                }
+            }
+            .animation(animate ? .linear(duration: scrollDuration) : nil, value: animate)
+            .padding(.leading, leftFade)
+            // minWidth 0 sizes the frame to its container, not to the wider text, so the mask clips the text.
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+            .mask(fadeMask)
+            .task(id: text) {
+                animate = false
+                var earliestStart = Date.now.addingTimeInterval(startDelay)
+                while !Task.isCancelled {
+                    let now = Date.now.timeIntervalSinceReferenceDate
+                    let start = MarqueeTiming.tick(atOrAfter: earliestStart.timeIntervalSinceReferenceDate)
+                    try? await Task.sleep(nanoseconds: UInt64(max(0, start - now) * 1_000_000_000))
+                    guard !Task.isCancelled else { return }
+                    animate = true
+                    try? await Task.sleep(nanoseconds: UInt64(scrollDuration * 1_000_000_000))
+                    // The second copy now sits where the first started, so jumping back is invisible.
+                    animate = false
+                    earliestStart = .now.addingTimeInterval(MarqueeTiming.minimumPause)
+                }
+            }
+        }
+
+        private var fadeMask: some View {
+            HStack(spacing: 0) {
+                Color.clear.frame(width: 2)
+                LinearGradient(colors: [.clear, .black], startPoint: .leading, endPoint: .trailing)
+                    .frame(width: leftFade)
+                Color.black
+                LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
+                    .frame(width: rightFade)
+                Color.clear.frame(width: 2)
+            }
         }
     }
 
