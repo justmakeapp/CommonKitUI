@@ -24,6 +24,8 @@ import SwiftUI
 ///
 /// Either way a title scrolls once, rests at its start, and starts on the same clock tick as every
 /// other marquee, so titles on screen scroll together and rest together.
+///
+/// With Reduce Motion on, the text stays still and is truncated with an ellipsis.
 public struct MarqueeText: View {
     public var text: String
     public var font: PlatformFont
@@ -37,16 +39,19 @@ public struct MarqueeText: View {
 
     var isCompact = false
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     public var body: some View {
         let stringWidth = text.widthOfString(usingFont: font)
         let stringHeight = text.heightOfString(usingFont: font)
 
         GeometryReader { geo in
-            if stringWidth > geo.size.width {
+            if stringWidth > geo.size.width, !reduceMotion {
                 scrollingText(width: geo.size.width)
             } else {
                 Text(text)
                     .font(.init(font))
+                    .lineLimit(1)
                     .foregroundStyle(ifSet: foregroundColor)
                     .frame(
                         minWidth: 0,

@@ -43,7 +43,7 @@ ExpandableText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do 
 **File:** `Text/MarqueeText.swift`
 **Platform:** All
 
-Horizontally scrolling text with fade edges. Only animates when the text is wider than the container: it scrolls once, then rests at its start, and every instance starts its scrolls on the same 10-second clock ticks. Uses `PlatformFont` (`UIFont` on iOS, `NSFont` on macOS).
+Horizontally scrolling text with fade edges. Only animates when the text is wider than the container: it scrolls once, then rests at its start, and every instance starts its scrolls on the same 10-second clock ticks. With Reduce Motion on, it never scrolls and truncates the text with an ellipsis instead. Uses `PlatformFont` (`UIFont` on iOS, `NSFont` on macOS).
 
 On iOS, tvOS and visionOS the scroll is a Core Animation animation that the render server plays, so the app does no per-frame work. That text is drawn in UIKit, which can't see `.fontWeight` or `.foregroundStyle`: put the weight in the font and pass the colour as `foregroundColor` (it falls back to `.primary`). On macOS and watchOS the scroll is a SwiftUI animation, and with no `foregroundColor` the text inherits `.foregroundStyle`.
 
